@@ -8,6 +8,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.widget.SearchView;
 
 import java.sql.SQLOutput;
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -23,7 +25,8 @@ public class MainActivity extends AppCompatActivity {
     SearchView searchView;
     ImageView addContact;
     String[] arr = {"rgs", "Agr", "rgs", "Agr", "rgs", "Agr"};
-    ArrayList<Contact> contactsArr=new ArrayList<>();
+    ArrayList<Contact> contactsArr = new ArrayList<>();
+
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,19 +46,22 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        dbHandler handler= new dbHandler(MainActivity.this,"Contacts",null,1);
+        dbHandler handler = new dbHandler(MainActivity.this, "Contacts", null, 1);
 
-        int sno=1;
+        int sno = 1;
 
-        while(true)
-        {
-            Contact contact=handler.accessContacts(sno);
+        while (true) {
+            Contact contact = handler.accessContacts(sno);
 
-            if(contact==null)
+            if (contact == null)
                 break;
-            Log.d("mytag",contact.getFirstName());
+            Log.d("mytag", contact.getFirstName());
             contactsArr.add(contact);
             sno++;
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            contactsArr.sort(Contact.contactsComparator);
         }
 
         CustomAdapter ca = new CustomAdapter(contactsArr);
@@ -63,9 +69,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(ca);
 
 
-
     }
-
 
 
 }

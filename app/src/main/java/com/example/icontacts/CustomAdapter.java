@@ -1,6 +1,7 @@
 package com.example.icontacts;
 
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,12 +14,12 @@ import java.util.ArrayList;
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
 
     private ArrayList<Contact> localDataSet;
-
+    int currSno;
     /**
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder).
      */
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final TextView textView;
 
         public ViewHolder(View view) {
@@ -30,6 +31,12 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
 
         public TextView getTextView() {
             return textView;
+        }
+
+        @Override
+        public void onClick(View view) {
+            Intent intent=new Intent();
+
         }
     }
 
@@ -59,7 +66,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
 
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
-
+        currSno=position;
         viewHolder.getTextView().setText(localDataSet.get(position).getFirstName());
     }
 

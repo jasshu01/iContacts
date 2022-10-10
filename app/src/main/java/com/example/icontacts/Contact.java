@@ -1,5 +1,7 @@
 package com.example.icontacts;
 
+import java.util.Comparator;
+
 public class Contact {
     private String firstName, lastName, phone1, phone2, email;
     private int sno;
@@ -72,4 +74,19 @@ public class Contact {
         this.phone2 = phone2;
         this.email = email;
     }
+
+    public static Comparator<Contact> contactsComparator = new Comparator<Contact>() {
+
+
+        public int compare(Contact c1, Contact c2) {
+            String name1 = c1.getFirstName().toUpperCase() + " " + c1.getLastName();
+            String name2 = c2.getFirstName().toUpperCase() + " " + c2.getLastName();
+
+
+            return name1.compareTo(name2);
+
+        }
+    };
+
+
 }

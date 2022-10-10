@@ -6,39 +6,66 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SearchView;
+
+import java.sql.SQLOutput;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
     SearchView searchView;
     ImageView addContact;
-    String[] arr={"rgs","Agr","rgs","Agr","rgs","Agr","rgs","Agr","rgs","Agr","rgs","Agr","rgs","Agr","rgs","Agr","rgs","Agr","rgs","Agr","rgs","Agr"};
+    String[] arr = {"rgs", "Agr", "rgs", "Agr", "rgs", "Agr"};
+    ArrayList<Contact> contactsArr=new ArrayList<>();
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        recyclerView= findViewById(R.id.recyclerView);
-        searchView= findViewById(R.id.searchView);
-        addContact= findViewById(R.id.addContact);
+        recyclerView = findViewById(R.id.recyclerView);
+        searchView = findViewById(R.id.searchView);
+        addContact = findViewById(R.id.addContact);
 
-        CustomAdapter ca=new CustomAdapter(arr);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(ca);
 
         addContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent= new Intent(MainActivity.this,addContactPage.class);
+                Intent intent = new Intent(MainActivity.this, addContactPage.class);
                 startActivity(intent);
             }
         });
 
+        dbHandler handler= new dbHandler(MainActivity.this,"Contacts",null,1);
+
+        int sno=1;
+
+        while(true)
+        {
+            Contact contact=handler.accessContacts(sno);
+
+            if(contact==null)
+                break;
+            Log.d("mytag",contact.getFirstName());
+            contactsArr.add(contact);
+            sno++;
+        }
+
+        CustomAdapter ca = new CustomAdapter(contactsArr);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(ca);
+
+
 
     }
+
+
+
 }

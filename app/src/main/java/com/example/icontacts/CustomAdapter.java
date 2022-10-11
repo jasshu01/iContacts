@@ -15,6 +15,7 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
 
@@ -46,10 +47,14 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         public void onClick(View view) {
 
             Log.d("contactIndex", String.valueOf(getAdapterPosition()));
-            int currPos = getAdapterPosition();
+            int position = getAdapterPosition();
             Intent intent = new Intent(context, ContactInfo.class);
+//            intent.putParcelableArrayListExtra("Contacts", (ArrayList<? extends Parcelable>) localDataSet);
+//            intent.putExtra("Contacts",ArrayList<Contact> localDataSet);
+
+            Toast.makeText(context, String.valueOf(position), Toast.LENGTH_SHORT).show();
 //            intent.putExtra("Contacts", localDataSet);
-            intent.putExtra("position", currPos);
+            intent.putExtra("position", position);
             context.startActivity(intent);
 
 

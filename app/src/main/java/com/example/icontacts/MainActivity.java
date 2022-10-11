@@ -67,20 +67,6 @@ public class MainActivity extends AppCompatActivity {
 
         CustomAdapter ca = new CustomAdapter(MainActivity.this,contactsArr);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-
-        recyclerView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int currPos = recyclerView.getChildAdapterPosition(view);
-                Log.d("currpos", String.valueOf(currPos));
-                Toast.makeText(MainActivity.this, String.valueOf(currPos), Toast.LENGTH_SHORT).show();
-//                Intent intent = new Intent(MainActivity.this,ContactInfo.class);
-//                intent.putExtra("Contacts", contactsArr);
-//                intent.putExtra("position", currPos);
-            }
-        });
-
         recyclerView.setAdapter(ca);
     }
 

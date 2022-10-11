@@ -155,4 +155,22 @@ public class dbHandler extends SQLiteOpenHelper {
 
     }
 
+
+    public void updateContact(Contact contact)
+    {
+        SQLiteDatabase db=getWritableDatabase();
+        ContentValues contentValues= new ContentValues();
+
+        contentValues.put("firstName",contact.getFirstName());
+        contentValues.put("lastName",contact.getLastName());
+        contentValues.put("phone1",contact.getPhone1());
+        contentValues.put("phone2",contact.getPhone2());
+        contentValues.put("email",contact.getEmail());
+
+        db.update("Contacts",contentValues,"sno=?",new String[]{String.valueOf(contact.getSno())});
+
+
+    }
+
+
 }

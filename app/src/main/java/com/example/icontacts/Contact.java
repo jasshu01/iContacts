@@ -6,6 +6,13 @@ public class Contact {
     private String firstName, lastName, phone1, phone2, email;
     private int sno;
 
+    public int getSno() {
+        return sno;
+    }
+
+    public void setSno(int sno) {
+        this.sno = sno;
+    }
 
     public String getFirstName() {
         return firstName;

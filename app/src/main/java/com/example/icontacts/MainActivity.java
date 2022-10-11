@@ -1,5 +1,6 @@
 package com.example.icontacts;
 
+import androidx.annotation.LongDef;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -39,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
         addContact = findViewById(R.id.addContact);
 
 
-
         addContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -49,30 +49,34 @@ public class MainActivity extends AppCompatActivity {
         });
 
         dbHandler handler = new dbHandler(MainActivity.this, "Contacts", null, 1);
+//        handler.addContact(new Contact("jasshu", "8195850098"));
+//        handler.addContact(new Contact("shivam", "8195850098"));
+//        handler.addContact(new Contact("abhay", "8195850098"));
+//        handler.addContact(new Contact("raghav", "8195850098"));
+//        handler.addContact(new Contact("tanishq", "8195850098"));
 
 
-        int sno = 1;
-
-        while (true) {
-            Contact contact = handler.accessContacts(sno);
-
-            if (contact == null)
-                break;
-            Log.d("mytag", contact.getFirstName());
-            contactsArr.add(contact);
-            sno++;
-        }
-
+        contactsArr = handler.allContacts();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             contactsArr.sort(Contact.contactsComparator);
         }
 
-        if(contactsArr.size()!=0)
-        {
-            CustomAdapter ca = new CustomAdapter(MainActivity.this,contactsArr);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            recyclerView.setAdapter(ca);
+        for (int i = 0; i < contactsArr.size(); i++) {
+            Log.d("GetId",String.valueOf(contactsArr.get(i).getSno()));
+            Log.d("GetId",contactsArr.get(i).getFirstName());
         }
+
+//        handler.deleteContact(3);
+//        handler.deleteContact(4);
+//        handler.deleteContact(5);
+//
+
+//        if(contactsArr.size()!=0)
+//        {
+        CustomAdapter ca = new CustomAdapter(MainActivity.this, contactsArr);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(ca);
+//        }
 
     }
 

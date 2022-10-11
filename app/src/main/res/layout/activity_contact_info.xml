@@ -77,21 +77,21 @@
         app:layout_constraintTop_toBottomOf="@+id/infoTextview5">
 
         <ImageView
-            android:id="@+id/imageView3"
+            android:id="@+id/deleteContact"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_weight="1"
             app:srcCompat="@drawable/deletecontact" />
 
         <ImageView
-            android:id="@+id/imageView5"
+            android:id="@+id/shareContact"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_weight="1"
             app:srcCompat="@drawable/sharecontact" />
 
         <ImageView
-            android:id="@+id/imageView4"
+            android:id="@+id/editContact"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_weight="1"

@@ -52,7 +52,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
 
             Toast.makeText(context, String.valueOf(position), Toast.LENGTH_SHORT).show();
 
-            intent.putExtra("position", position);
+            intent.putExtra("sno", localDataSet.get(position).getSno());
             intent.putExtra("firstName", localDataSet.get(position).getFirstName());
             intent.putExtra("lastName", localDataSet.get(position).getLastName());
             intent.putExtra("phone1", localDataSet.get(position).getPhone1());
@@ -94,7 +94,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
 
-        viewHolder.getTextView().setText(localDataSet.get(position).getFirstName());
+        viewHolder.getTextView().setText(localDataSet.get(position).getFirstName() +" "+ position);
     }
 
     // Return the size of your dataset (invoked by the layout manager)

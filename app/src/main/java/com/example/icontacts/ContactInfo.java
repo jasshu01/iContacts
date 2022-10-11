@@ -2,32 +2,40 @@ package com.example.icontacts;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
 public class ContactInfo extends AppCompatActivity {
-    TextView textview;
-    TextView[] textViewArray = new TextView[5];
-    ArrayList<Contact> myContacts;
 
+    TextView[] textViewArray = new TextView[5];
+    ImageView deleteContact,shareContact,editContact;
+
+    @SuppressLint({"ResourceType", "MissingInflatedId"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_info);
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
-        int position = intent.getIntExtra("position", -1);
-        String firstName, lastName, phone1, phone2, email;
+        int sno = intent.getIntExtra("sno", -1);
 
-        if(position==-1)
+
+        if(sno==-1)
             return;
 
-
+        String firstName, lastName, phone1, phone2, email;
         firstName = intent.getStringExtra("firstName");
         lastName = intent.getStringExtra("lastName");
         phone1 = intent.getStringExtra("phone1");
@@ -40,23 +48,47 @@ public class ContactInfo extends AppCompatActivity {
         textViewArray[3] = findViewById(R.id.infoTextview4);
         textViewArray[4] = findViewById(R.id.infoTextview5);
 
+        deleteContact=findViewById(R.id.deleteContact);
+        editContact=findViewById(R.id.editContact);
+        shareContact=findViewById(R.id.shareContact);
+
+
+        deleteContact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Toast.makeText(ContactInfo.this, "Deleting", Toast.LENGTH_SHORT).show();
+                dbHandler handler= new dbHandler(ContactInfo.this,"Contacts",null,1);
+                handler.deleteContact(sno);
+                Intent intent1=new Intent(ContactInfo.this,MainActivity.class);
+                startActivity(intent1);
+            }
+        });
+
 
         textViewArray[0].setText(firstName);
 
-        int sno = 1;
+        int index = 1;
 
         if (lastName.length() != 0) {
-            textViewArray[sno++].setText(lastName);
+            textViewArray[index++].setText(lastName);
         }
         if (phone1.length() != 0) {
-            textViewArray[sno++].setText(phone1);
+            textViewArray[index++].setText(phone1);
         }
         if (phone2.length() != 0) {
-            textViewArray[sno++].setText(phone2);
+            textViewArray[index++].setText(phone2);
         }
         if (email.length() != 0) {
-            textViewArray[sno].setText(email);
+            textViewArray[index].setText(email);
         }
 
+
+
+
     }
+
+
+
+
 }

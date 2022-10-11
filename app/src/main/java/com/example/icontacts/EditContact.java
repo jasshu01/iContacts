@@ -2,9 +2,11 @@ package com.example.icontacts;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.PhoneNumberFormattingTextWatcher;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -12,7 +14,7 @@ import android.widget.Toast;
 public class EditContact extends AppCompatActivity {
     EditText editFirstName, editLastName, editPhone1, editPhone2, editEmail;
     Button editCancelbtn, editUpdatebtn;
-
+    Context parentContext;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +39,12 @@ public class EditContact extends AppCompatActivity {
         editEmail.setText(intent.getStringExtra("email"));
 
 
+        editCancelbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               finish();
+            }
+        });
 
     }
 }

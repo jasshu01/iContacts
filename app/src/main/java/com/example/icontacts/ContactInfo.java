@@ -3,6 +3,7 @@ package com.example.icontacts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ public class ContactInfo extends AppCompatActivity {
     ImageView deleteContact, shareContact, editContact;
     String firstName, lastName, phone1, phone2, email;
     int sno;
+
 
     @SuppressLint({"ResourceType", "MissingInflatedId"})
     @Override
@@ -54,6 +56,7 @@ public class ContactInfo extends AppCompatActivity {
         shareContact = findViewById(R.id.shareContact);
 
 
+
         deleteContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -77,6 +80,7 @@ public class ContactInfo extends AppCompatActivity {
                 intent1.putExtra("phone1", phone1);
                 intent1.putExtra("phone2", phone2);
                 intent1.putExtra("email", email);
+
 
                 startActivity(intent1);
             }

@@ -55,10 +55,14 @@ public class addContactPage extends AppCompatActivity {
 
                 dbHandler handler = new dbHandler(addContactPage.this, "Contacts", null, 1);
                 SQLiteDatabase db = handler.getWritableDatabase();
-                handler.addContact(contact);
-                Toast.makeText(addContactPage.this, "Contact Saved", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(addContactPage.this, MainActivity.class);
-                startActivity(intent);
+
+                if(handler.addContact(contact))
+                {
+                    Toast.makeText(addContactPage.this, "Contact Saved", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(addContactPage.this, MainActivity.class);
+                    startActivity(intent);
+                }
+
             }
         });
 

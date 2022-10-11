@@ -1,11 +1,16 @@
 package com.example.icontacts;
 
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Parcelable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -13,8 +18,9 @@ import java.util.ArrayList;
 
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
 
-    private ArrayList<Contact> localDataSet;
-    int currSno;
+    private static ArrayList<Contact> localDataSet;
+    private static Context context;
+
     /**
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder).
@@ -25,28 +31,40 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         public ViewHolder(View view) {
             super(view);
             // Define click listener for the ViewHolder's View
-
+            view.setOnClickListener(this);
             textView = (TextView) view.findViewById(R.id.contactName);
+
         }
+
 
         public TextView getTextView() {
             return textView;
         }
 
+
         @Override
         public void onClick(View view) {
-            Intent intent=new Intent();
+
+            Log.d("contactIndex", String.valueOf(getAdapterPosition()));
+            int currPos = getAdapterPosition();
+            Intent intent = new Intent(context, ContactInfo.class);
+//            intent.putExtra("Contacts", localDataSet);
+            intent.putExtra("position", currPos);
+            context.startActivity(intent);
+
 
         }
     }
+
 
     /**
      * Initialize the dataset of the Adapter.
      *
      * @param dataSet String[] containing the data to populate views to be used
-     * by RecyclerView.
+     *                by RecyclerView.
      */
-    public CustomAdapter(ArrayList<Contact> dataSet) {
+    public CustomAdapter(Context context, ArrayList<Contact> dataSet) {
+        this.context = context;
         localDataSet = dataSet;
     }
 
@@ -62,11 +80,11 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(ViewHolder viewHolder, final int position) {
+    public void onBindViewHolder(ViewHolder viewHolder, @SuppressLint("RecyclerView") final int position) {
 
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
-        currSno=position;
+
         viewHolder.getTextView().setText(localDataSet.get(position).getFirstName());
     }
 
@@ -76,4 +94,5 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         return localDataSet.size();
     }
 }
+
 

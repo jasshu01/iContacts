@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import java.sql.SQLOutput;
 import java.util.ArrayList;
@@ -64,11 +65,23 @@ public class MainActivity extends AppCompatActivity {
             contactsArr.sort(Contact.contactsComparator);
         }
 
-        CustomAdapter ca = new CustomAdapter(contactsArr);
+        CustomAdapter ca = new CustomAdapter(MainActivity.this,contactsArr);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+
+        recyclerView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int currPos = recyclerView.getChildAdapterPosition(view);
+                Log.d("currpos", String.valueOf(currPos));
+                Toast.makeText(MainActivity.this, String.valueOf(currPos), Toast.LENGTH_SHORT).show();
+//                Intent intent = new Intent(MainActivity.this,ContactInfo.class);
+//                intent.putExtra("Contacts", contactsArr);
+//                intent.putExtra("position", currPos);
+            }
+        });
+
         recyclerView.setAdapter(ca);
-
-
     }
 
 

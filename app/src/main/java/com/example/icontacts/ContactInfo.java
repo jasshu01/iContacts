@@ -20,7 +20,9 @@ import java.util.ArrayList;
 public class ContactInfo extends AppCompatActivity {
 
     TextView[] textViewArray = new TextView[5];
-    ImageView deleteContact,shareContact,editContact;
+    ImageView deleteContact, shareContact, editContact;
+    String firstName, lastName, phone1, phone2, email;
+    int sno;
 
     @SuppressLint({"ResourceType", "MissingInflatedId"})
     @Override
@@ -28,14 +30,13 @@ public class ContactInfo extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_info);
         Intent intent = getIntent();
-        Bundle bundle = intent.getExtras();
-        int sno = intent.getIntExtra("sno", -1);
+
+        sno = intent.getIntExtra("sno", -1);
 
 
-        if(sno==-1)
+        if (sno == -1)
             return;
 
-        String firstName, lastName, phone1, phone2, email;
         firstName = intent.getStringExtra("firstName");
         lastName = intent.getStringExtra("lastName");
         phone1 = intent.getStringExtra("phone1");
@@ -48,9 +49,9 @@ public class ContactInfo extends AppCompatActivity {
         textViewArray[3] = findViewById(R.id.infoTextview4);
         textViewArray[4] = findViewById(R.id.infoTextview5);
 
-        deleteContact=findViewById(R.id.deleteContact);
-        editContact=findViewById(R.id.editContact);
-        shareContact=findViewById(R.id.shareContact);
+        deleteContact = findViewById(R.id.deleteContact);
+        editContact = findViewById(R.id.editContact);
+        shareContact = findViewById(R.id.shareContact);
 
 
         deleteContact.setOnClickListener(new View.OnClickListener() {
@@ -58,9 +59,25 @@ public class ContactInfo extends AppCompatActivity {
             public void onClick(View view) {
 
                 Toast.makeText(ContactInfo.this, "Deleting", Toast.LENGTH_SHORT).show();
-                dbHandler handler= new dbHandler(ContactInfo.this,"Contacts",null,1);
+                dbHandler handler = new dbHandler(ContactInfo.this, "Contacts", null, 1);
                 handler.deleteContact(sno);
-                Intent intent1=new Intent(ContactInfo.this,MainActivity.class);
+                Intent intent1 = new Intent(ContactInfo.this, MainActivity.class);
+                startActivity(intent1);
+            }
+        });
+
+        editContact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent1 = new Intent(ContactInfo.this, EditContact.class);
+
+                intent1.putExtra("sno", sno);
+                intent1.putExtra("firstName", firstName);
+                intent1.putExtra("lastName", lastName);
+                intent1.putExtra("phone1", phone1);
+                intent1.putExtra("phone2", phone2);
+                intent1.putExtra("email", email);
+
                 startActivity(intent1);
             }
         });
@@ -84,11 +101,7 @@ public class ContactInfo extends AppCompatActivity {
         }
 
 
-
-
     }
-
-
 
 
 }

@@ -90,9 +90,6 @@ public class dbHandler extends SQLiteOpenHelper {
         }
 
 
-        contact.setSno((int) sNo + 1);
-
-        contentValues.put("firstName", contact.getSno());
         contentValues.put("firstName", contact.getFirstName());
         contentValues.put("lastName", contact.getLastName());
         contentValues.put("phone1", contact.getPhone1());
@@ -100,7 +97,7 @@ public class dbHandler extends SQLiteOpenHelper {
         contentValues.put("email", contact.getEmail());
 
         long k = db.insert("Contacts", null, contentValues);
-        sNo = k;
+
         db.close();
         Log.d("adding", "addContact: " + k);
         return true;

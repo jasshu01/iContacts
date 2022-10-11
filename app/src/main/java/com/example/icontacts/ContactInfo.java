@@ -21,8 +21,11 @@ public class ContactInfo extends AppCompatActivity {
         setContentView(R.layout.activity_contact_info);
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
-        int position = intent.getIntExtra("position", 2);
+        int position = intent.getIntExtra("position", -1);
         String firstName, lastName, phone1, phone2, email;
+
+        if(position==-1)
+            return;
 
 
         firstName = intent.getStringExtra("firstName");

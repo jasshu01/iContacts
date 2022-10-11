@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     SearchView searchView;
     ImageView addContact;
-    String[] arr = {"rgs", "Agr", "rgs", "Agr", "rgs", "Agr"};
+
     ArrayList<Contact> contactsArr = new ArrayList<>();
 
     @SuppressLint("MissingInflatedId")
@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         addContact = findViewById(R.id.addContact);
 
 
+
         addContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         dbHandler handler = new dbHandler(MainActivity.this, "Contacts", null, 1);
+
 
         int sno = 1;
 
@@ -65,9 +67,13 @@ public class MainActivity extends AppCompatActivity {
             contactsArr.sort(Contact.contactsComparator);
         }
 
-        CustomAdapter ca = new CustomAdapter(MainActivity.this,contactsArr);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(ca);
+        if(contactsArr.size()!=0)
+        {
+            CustomAdapter ca = new CustomAdapter(MainActivity.this,contactsArr);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            recyclerView.setAdapter(ca);
+        }
+
     }
 
 

@@ -49,12 +49,16 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
             Log.d("contactIndex", String.valueOf(getAdapterPosition()));
             int position = getAdapterPosition();
             Intent intent = new Intent(context, ContactInfo.class);
-//            intent.putParcelableArrayListExtra("Contacts", (ArrayList<? extends Parcelable>) localDataSet);
-//            intent.putExtra("Contacts",ArrayList<Contact> localDataSet);
 
             Toast.makeText(context, String.valueOf(position), Toast.LENGTH_SHORT).show();
-//            intent.putExtra("Contacts", localDataSet);
+
             intent.putExtra("position", position);
+            intent.putExtra("firstName", localDataSet.get(position).getFirstName());
+            intent.putExtra("lastName", localDataSet.get(position).getLastName());
+            intent.putExtra("phone1", localDataSet.get(position).getPhone1());
+            intent.putExtra("phone2", localDataSet.get(position).getPhone2());
+            intent.putExtra("email", localDataSet.get(position).getEmail());
+
             context.startActivity(intent);
 
 

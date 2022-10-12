@@ -13,16 +13,17 @@
         android:layout_marginTop="36dp"
         android:textSize="34sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
     <ImageView
         android:id="@+id/imageView2"
-        android:layout_width="127dp"
-        android:layout_height="141dp"
-        android:layout_marginTop="68dp"
+        android:layout_width="138dp"
+        android:layout_height="67dp"
+        android:layout_marginTop="48dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/person" />
@@ -31,50 +32,32 @@
         android:id="@+id/infoTextview2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="44dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/infoTextview1" />
-
-    <TextView
-        android:id="@+id/infoTextview3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/infoTextview2" />
-
-    <TextView
-        android:id="@+id/infoTextview4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/infoTextview3" />
 
     <TextView
         android:id="@+id/infoTextview5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="44dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/infoTextview4" />
+        app:layout_constraintTop_toBottomOf="@+id/message2"
+        app:layout_constraintVertical_bias="0.511" />
 
     <LinearLayout
-        android:layout_width="300dp"
-        android:layout_height="60dp"
+        android:id="@+id/linearLayout2"
+        android:layout_width="303dp"
+        android:layout_height="67dp"
+        android:layout_marginBottom="52dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/infoTextview5">
+        app:layout_constraintStart_toStartOf="parent">
 
         <ImageView
             android:id="@+id/deleteContact"
@@ -97,5 +80,78 @@
             android:layout_weight="1"
             app:srcCompat="@drawable/editcontact" />
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/call1"
+        android:layout_width="40dp"
+        android:layout_height="67dp"
+        app:layout_constraintBottom_toBottomOf="@+id/message1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.63"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/message1"
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="@drawable/call" />
+
+    <ImageView
+        android:id="@+id/message2"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="56dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.237"
+        app:layout_constraintStart_toEndOf="@+id/call2"
+        app:layout_constraintTop_toBottomOf="@+id/message1"
+        app:srcCompat="@drawable/message" />
+
+    <ImageView
+        android:id="@+id/call2"
+        android:layout_width="40dp"
+        android:layout_height="67dp"
+        app:layout_constraintBottom_toBottomOf="@+id/message2"
+        app:layout_constraintEnd_toEndOf="@+id/call1"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/call1"
+        app:layout_constraintTop_toTopOf="@+id/message2"
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="@drawable/call" />
+
+    <TextView
+        android:id="@+id/infoTextview3"
+        android:layout_width="181dp"
+        android:layout_height="52dp"
+        android:layout_marginStart="24dp"
+        android:gravity="center_horizontal|center_vertical"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/call1"
+        app:layout_constraintEnd_toStartOf="@+id/call1"
+        app:layout_constraintHorizontal_bias="0.655"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/call1"
+        app:layout_constraintVertical_bias="0.6" />
+
+    <TextView
+        android:id="@+id/infoTextview4"
+        android:layout_width="181dp"
+        android:layout_height="63dp"
+        android:gravity="center_horizontal|center_vertical"
+        android:textSize="18dp"
+        app:layout_constraintBottom_toBottomOf="@+id/call2"
+        app:layout_constraintEnd_toStartOf="@+id/call2"
+        app:layout_constraintHorizontal_bias="0.716"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/call2"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <ImageView
+        android:id="@+id/message1"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="88dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.237"
+        app:layout_constraintStart_toEndOf="@+id/call1"
+        app:layout_constraintTop_toBottomOf="@+id/infoTextview2"
+        app:srcCompat="@drawable/message" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

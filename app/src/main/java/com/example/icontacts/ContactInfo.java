@@ -1,27 +1,23 @@
 package com.example.icontacts;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
-
 public class ContactInfo extends AppCompatActivity {
 
     TextView[] textViewArray = new TextView[5];
-    ImageView deleteContact, shareContact, editContact;
+    ImageView deleteContact, shareContact, editContact,call1,call2,message1,message2;
     String firstName, lastName, phone1, phone2, email;
     int sno;
 
@@ -54,7 +50,10 @@ public class ContactInfo extends AppCompatActivity {
         deleteContact = findViewById(R.id.deleteContact);
         editContact = findViewById(R.id.editContact);
         shareContact = findViewById(R.id.shareContact);
-
+        call1=findViewById(R.id.call1);
+        message1=findViewById(R.id.message1);
+        call2=findViewById(R.id.call2);
+        message2=findViewById(R.id.message2);
 
 
         deleteContact.setOnClickListener(new View.OnClickListener() {
@@ -87,22 +86,56 @@ public class ContactInfo extends AppCompatActivity {
         });
 
 
+        call1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent callIntent = new Intent(Intent.ACTION_CALL);
+//                Toast.makeText(ContactInfo.this, "Calling "+intent.getStringExtra("phone1"), Toast.LENGTH_SHORT).show();
+                callIntent.setData(Uri.parse("tel:"+intent.getStringExtra("phone1")));
+                if(ActivityCompat.checkSelfPermission(ContactInfo.this, Manifest.permission.CALL_PHONE)!= PackageManager.PERMISSION_GRANTED)
+                {
+                    return;
+                }
+                startActivity(callIntent);
+            }
+        });
+
+        call2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent callIntent = new Intent(Intent.ACTION_CALL);
+//                Toast.makeText(ContactInfo.this, "Calling "+intent.getStringExtra("phone2"), Toast.LENGTH_SHORT).show();
+                callIntent.setData(Uri.parse("tel:"+intent.getStringExtra("phone2")));
+                if(ActivityCompat.checkSelfPermission(ContactInfo.this, Manifest.permission.CALL_PHONE)!= PackageManager.PERMISSION_GRANTED)
+                {
+                    return;
+                }
+                startActivity(callIntent);
+            }
+        });
+
+
         textViewArray[0].setText(firstName);
 
-        int index = 1;
+        if (phone1.length()==0)
+        {
+            call1.setVisibility(View.GONE);
+            message1.setVisibility(View.GONE);
+        }
+         if (phone2.length()==0)
+        {
+            call2.setVisibility(View.GONE);
+            message2.setVisibility(View.GONE);
+        }
 
-        if (lastName.length() != 0) {
-            textViewArray[index++].setText(lastName);
-        }
-        if (phone1.length() != 0) {
-            textViewArray[index++].setText(phone1);
-        }
-        if (phone2.length() != 0) {
-            textViewArray[index++].setText(phone2);
-        }
-        if (email.length() != 0) {
-            textViewArray[index].setText(email);
-        }
+
+        int index = 1;
+        textViewArray[index++].setText(lastName);
+        textViewArray[index++].setText(phone1);
+        textViewArray[index++].setText(phone2);
+        textViewArray[index].setText(email);
+
+
 
 
     }

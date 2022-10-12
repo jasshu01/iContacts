@@ -45,24 +45,25 @@ public class dbHandler extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
 
         String contact_firstName = contact.getFirstName();
-
-        Log.d("details", String.valueOf(contact_firstName.length()));
-        if (contact_firstName.length() == 0) {
-//            Toast.makeText(MainActivity.this, "Fill up First Name", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
-
         String contact_lastName = contact.getLastName();
         String contact_Phone1 = contact.getPhone1();
         String contact_Phone2 = contact.getPhone2();
         String contact_Email = contact.getEmail();
 
-        if (contact_firstName != null) {
-            contact.setFirstName(contact_firstName);
-        } else {
+
+        if (contact_Phone1.length() == 0) {
             return false;
-//            contact.setFirstName("");
+        }
+
+
+        if (contact_firstName != null) {
+            if (contact_firstName.length() == 0) {
+                contact.setFirstName(contact_Phone1);
+
+            } else
+                contact.setFirstName(contact_firstName);
+        } else {
+            contact.setFirstName(contact_Phone1);
         }
 
         if (contact_lastName != null) {
@@ -158,20 +159,19 @@ public class dbHandler extends SQLiteOpenHelper {
     }
 
 
-    public void updateContact(Contact contact)
-    {
-        SQLiteDatabase db=getWritableDatabase();
-        ContentValues contentValues= new ContentValues();
+    public void updateContact(Contact contact) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
 
-        contentValues.put("firstName",contact.getFirstName());
-        contentValues.put("lastName",contact.getLastName());
-        contentValues.put("phone1",contact.getPhone1());
-        contentValues.put("phone2",contact.getPhone2());
-        contentValues.put("email",contact.getEmail());
-        contentValues.put("fav",contact.isFav());
-        Log.d("updating", "updateContact: "+contact.getFirstName()+" "+contact.isFav()+" "+contact.getSno());
+        contentValues.put("firstName", contact.getFirstName());
+        contentValues.put("lastName", contact.getLastName());
+        contentValues.put("phone1", contact.getPhone1());
+        contentValues.put("phone2", contact.getPhone2());
+        contentValues.put("email", contact.getEmail());
+        contentValues.put("fav", contact.isFav());
+        Log.d("updating", "updateContact: " + contact.getFirstName() + " " + contact.isFav() + " " + contact.getSno());
 
-        db.update("Contacts",contentValues,"sno=?",new String[]{String.valueOf(contact.getSno())});
+        db.update("Contacts", contentValues, "sno=?", new String[]{String.valueOf(contact.getSno())});
 
 
     }

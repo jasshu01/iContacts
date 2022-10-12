@@ -113,6 +113,26 @@ public class ContactInfo extends AppCompatActivity {
                 startActivity(callIntent);
             }
         });
+        message1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Uri uri = Uri.parse("smsto:"+intent.getStringExtra("phone1"));
+                Intent messageIntent = new Intent(Intent.ACTION_SENDTO, uri);
+                startActivity(messageIntent);
+
+            }
+        });
+        message2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Uri uri = Uri.parse("smsto:"+intent.getStringExtra("phone2"));
+                Intent messageIntent = new Intent(Intent.ACTION_SENDTO, uri);
+                startActivity(messageIntent);
+
+            }
+        });
 
 
         textViewArray[0].setText(firstName);

@@ -4,17 +4,20 @@ package com.example.icontacts;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
@@ -22,24 +25,32 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     private static ArrayList<Contact> localDataSet;
     private static Context context;
 
+
     /**
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder).
      */
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final TextView textView;
+        private static ImageView fav;
 
         public ViewHolder(View view) {
             super(view);
             // Define click listener for the ViewHolder's View
             view.setOnClickListener(this);
             textView = (TextView) view.findViewById(R.id.contactName);
+            fav = (ImageView) view.findViewById(R.id.fav);
+
 
         }
 
 
         public TextView getTextView() {
             return textView;
+        }
+
+        public ImageView getImageView() {
+            return fav;
         }
 
 
@@ -94,7 +105,40 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
 
-        viewHolder.getTextView().setText(localDataSet.get(position).getFirstName() +" "+ position);
+
+        viewHolder.getTextView().setText(localDataSet.get(position).getFirstName());
+        ImageView img = viewHolder.getImageView();
+
+
+        if (localDataSet.get(position).isFav() == 1) {
+            img.setImageResource(R.drawable.fav);
+        } else {
+            img.setImageResource(R.drawable.fav_borderd);
+        }
+
+
+        img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                dbHandler handler = new dbHandler(context, "Contacts", null, 1);
+                img.setImageResource(R.drawable.fav);
+                if (localDataSet.get(position).isFav() == 0) {
+                    img.setImageResource(R.drawable.fav);
+                    localDataSet.get(position).setFav(1);
+                    handler.updateContact(localDataSet.get(position));
+                } else {
+                    img.setImageResource(R.drawable.fav_borderd);
+                    localDataSet.get(position).setFav(0);
+                    handler.updateContact(localDataSet.get(position));
+                }
+
+
+//                Toast.makeText(context, "fav clicked " + localDataSet.get(position).getFirstName(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
     }
 
     // Return the size of your dataset (invoked by the layout manager)

@@ -27,7 +27,7 @@ public class dbHandler extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String create = "CREATE TABLE CONTACTS (sno INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,FIRSTNAME TEXT,LASTNAME TEXT,PHONE1 TEXT,PHONE2 TEXT , EMAIL TEXT)";
+        String create = "CREATE TABLE CONTACTS (sno INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,FIRSTNAME TEXT,LASTNAME TEXT,PHONE1 TEXT,PHONE2 TEXT , EMAIL TEXT,fav INTEGER)";
 
         db.execSQL(create);
 
@@ -95,6 +95,7 @@ public class dbHandler extends SQLiteOpenHelper {
         contentValues.put("phone1", contact.getPhone1());
         contentValues.put("phone2", contact.getPhone2());
         contentValues.put("email", contact.getEmail());
+        contentValues.put("fav", 0);
 
         long k = db.insert("Contacts", null, contentValues);
 
@@ -103,25 +104,25 @@ public class dbHandler extends SQLiteOpenHelper {
         return true;
     }
 
-    public Contact accessContacts(int sno) {
-
-        SQLiteDatabase db = getReadableDatabase();
-
-        Cursor cursor = db.query("Contacts", new String[]{"sno", "firstName", "lastName", "phone1", "phone2", "email"}, "sno=?", new String[]{String.valueOf(sno)}, null, null, null, null);
-
-        if (cursor != null && cursor.moveToFirst()) {
-
-            Contact contact = new Contact(cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5));
-            return contact;
-
-        } else {
-            Log.d("mytag", "some error ");
-
-        }
-
-        return null;
-
-    }
+//    public Contact accessContacts(int sno) {
+//
+//        SQLiteDatabase db = getReadableDatabase();
+//
+//        Cursor cursor = db.query("Contacts", new String[]{"sno", "firstName", "lastName", "phone1", "phone2", "email"}, "sno=?", new String[]{String.valueOf(sno)}, null, null, null, null);
+//
+//        if (cursor != null && cursor.moveToFirst()) {
+//
+//            Contact contact = new Contact(cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5));
+//            return contact;
+//
+//        } else {
+//            Log.d("mytag", "some error ");
+//
+//        }
+//
+//        return null;
+//
+//    }
 
     public ArrayList<Contact> allContacts() {
         ArrayList<Contact> contactsArr = new ArrayList<>();
@@ -139,6 +140,7 @@ public class dbHandler extends SQLiteOpenHelper {
                 contact.setPhone1(cursor.getString(3));
                 contact.setPhone2(cursor.getString(4));
                 contact.setEmail(cursor.getString(5));
+                contact.setFav(cursor.getInt(6));
                 contactsArr.add(contact);
             } while (cursor.moveToNext());
         }
@@ -166,6 +168,8 @@ public class dbHandler extends SQLiteOpenHelper {
         contentValues.put("phone1",contact.getPhone1());
         contentValues.put("phone2",contact.getPhone2());
         contentValues.put("email",contact.getEmail());
+        contentValues.put("fav",contact.isFav());
+        Log.d("updating", "updateContact: "+contact.getFirstName()+" "+contact.isFav()+" "+contact.getSno());
 
         db.update("Contacts",contentValues,"sno=?",new String[]{String.valueOf(contact.getSno())});
 

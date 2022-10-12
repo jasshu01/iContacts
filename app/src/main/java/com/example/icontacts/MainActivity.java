@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < contactsArr.size(); i++) {
             Log.d("GetId",String.valueOf(contactsArr.get(i).getSno()));
             Log.d("GetId",contactsArr.get(i).getFirstName());
+            Log.d("GetId",String.valueOf(contactsArr.get(i).isFav()));
         }
 
 //        handler.deleteContact(3);

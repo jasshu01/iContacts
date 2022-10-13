@@ -7,18 +7,29 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.Random;
+
 public class ContactInfo extends AppCompatActivity {
 
     TextView[] textViewArray = new TextView[5];
-    ImageView deleteContact, shareContact, editContact, call1, call2, message1, message2;
+    ImageView deleteContact, shareContact, editContact, call1, call2, message1, message2,contactInfoPic;
     String firstName, lastName, phone1, phone2, email;
+    TextView contactInfoDisplayText;
     int sno;
 
 
@@ -54,6 +65,32 @@ public class ContactInfo extends AppCompatActivity {
         message1 = findViewById(R.id.message1);
         call2 = findViewById(R.id.call2);
         message2 = findViewById(R.id.message2);
+        contactInfoPic = findViewById(R.id.contactInfoPic);
+        contactInfoDisplayText = findViewById(R.id.contactInfoDisplayText);
+
+        ImageView displayPic=contactInfoPic;
+        TextView displayText=contactInfoDisplayText;
+
+        displayPic.setImageResource(R.drawable.person);
+        String filename = firstName+lastName+phone1;
+        try {
+            File f = new File("/data/user/0/com.example.icontacts/app_imageDir", filename + ".jpg");
+            Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
+            displayPic.setImageBitmap(b);
+            displayText.setVisibility(View.GONE);
+        } catch (FileNotFoundException e) {
+
+            displayPic.setVisibility(View.GONE);
+            String firstLetter = (String) firstName.subSequence(0, 1);
+            firstLetter=firstLetter.toUpperCase();
+            displayText.setText(firstLetter);
+            Random randomBackgroundColor = new Random();
+            int color = Color.argb(randomBackgroundColor.nextInt(256), randomBackgroundColor.nextInt(256), randomBackgroundColor.nextInt(256), randomBackgroundColor.nextInt(256));
+            displayText.setBackgroundColor(color);
+
+            Log.d("imagepick", "error");
+            e.printStackTrace();
+        }
 
 
         deleteContact.setOnClickListener(new View.OnClickListener() {

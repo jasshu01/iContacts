@@ -17,7 +17,7 @@ import android.widget.Toast;
 public class ContactInfo extends AppCompatActivity {
 
     TextView[] textViewArray = new TextView[5];
-    ImageView deleteContact, shareContact, editContact,call1,call2,message1,message2;
+    ImageView deleteContact, shareContact, editContact, call1, call2, message1, message2;
     String firstName, lastName, phone1, phone2, email;
     int sno;
 
@@ -50,10 +50,10 @@ public class ContactInfo extends AppCompatActivity {
         deleteContact = findViewById(R.id.deleteContact);
         editContact = findViewById(R.id.editContact);
         shareContact = findViewById(R.id.shareContact);
-        call1=findViewById(R.id.call1);
-        message1=findViewById(R.id.message1);
-        call2=findViewById(R.id.call2);
-        message2=findViewById(R.id.message2);
+        call1 = findViewById(R.id.call1);
+        message1 = findViewById(R.id.message1);
+        call2 = findViewById(R.id.call2);
+        message2 = findViewById(R.id.message2);
 
 
         deleteContact.setOnClickListener(new View.OnClickListener() {
@@ -65,6 +65,33 @@ public class ContactInfo extends AppCompatActivity {
                 handler.deleteContact(sno);
                 Intent intent1 = new Intent(ContactInfo.this, MainActivity.class);
                 startActivity(intent1);
+            }
+        });
+        shareContact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+
+                String myMessage = "";
+                if (firstName != phone1)
+                    myMessage = firstName;
+                if (lastName.length() != 0)
+                    myMessage += " " + lastName + "\n";
+                if (phone1.length() != 0)
+                    myMessage += phone1 + "\n";
+                if (phone2.length() != 0)
+                    myMessage += phone2 + "\n";
+                if (email.length() != 0)
+                    myMessage += email + "\n";
+
+
+                sendIntent.putExtra(Intent.EXTRA_TEXT, myMessage);
+                sendIntent.setType("text/plain");
+
+                Intent shareIntent = Intent.createChooser(sendIntent, null);
+                startActivity(shareIntent);
             }
         });
 
@@ -91,9 +118,8 @@ public class ContactInfo extends AppCompatActivity {
             public void onClick(View view) {
                 Intent callIntent = new Intent(Intent.ACTION_CALL);
 //                Toast.makeText(ContactInfo.this, "Calling "+intent.getStringExtra("phone1"), Toast.LENGTH_SHORT).show();
-                callIntent.setData(Uri.parse("tel:"+intent.getStringExtra("phone1")));
-                if(ActivityCompat.checkSelfPermission(ContactInfo.this, Manifest.permission.CALL_PHONE)!= PackageManager.PERMISSION_GRANTED)
-                {
+                callIntent.setData(Uri.parse("tel:" + intent.getStringExtra("phone1")));
+                if (ActivityCompat.checkSelfPermission(ContactInfo.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                     return;
                 }
                 startActivity(callIntent);
@@ -105,9 +131,8 @@ public class ContactInfo extends AppCompatActivity {
             public void onClick(View view) {
                 Intent callIntent = new Intent(Intent.ACTION_CALL);
 //                Toast.makeText(ContactInfo.this, "Calling "+intent.getStringExtra("phone2"), Toast.LENGTH_SHORT).show();
-                callIntent.setData(Uri.parse("tel:"+intent.getStringExtra("phone2")));
-                if(ActivityCompat.checkSelfPermission(ContactInfo.this, Manifest.permission.CALL_PHONE)!= PackageManager.PERMISSION_GRANTED)
-                {
+                callIntent.setData(Uri.parse("tel:" + intent.getStringExtra("phone2")));
+                if (ActivityCompat.checkSelfPermission(ContactInfo.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                     return;
                 }
                 startActivity(callIntent);
@@ -117,7 +142,7 @@ public class ContactInfo extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Uri uri = Uri.parse("smsto:"+intent.getStringExtra("phone1"));
+                Uri uri = Uri.parse("smsto:" + intent.getStringExtra("phone1"));
                 Intent messageIntent = new Intent(Intent.ACTION_SENDTO, uri);
                 startActivity(messageIntent);
 
@@ -127,7 +152,7 @@ public class ContactInfo extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Uri uri = Uri.parse("smsto:"+intent.getStringExtra("phone2"));
+                Uri uri = Uri.parse("smsto:" + intent.getStringExtra("phone2"));
                 Intent messageIntent = new Intent(Intent.ACTION_SENDTO, uri);
                 startActivity(messageIntent);
 
@@ -137,13 +162,11 @@ public class ContactInfo extends AppCompatActivity {
 
         textViewArray[0].setText(firstName);
 
-        if (phone1.length()==0)
-        {
+        if (phone1.length() == 0) {
             call1.setVisibility(View.GONE);
             message1.setVisibility(View.GONE);
         }
-         if (phone2.length()==0)
-        {
+        if (phone2.length() == 0) {
             call2.setVisibility(View.GONE);
             message2.setVisibility(View.GONE);
         }
@@ -154,8 +177,6 @@ public class ContactInfo extends AppCompatActivity {
         textViewArray[index++].setText(phone1);
         textViewArray[index++].setText(phone2);
         textViewArray[index].setText(email);
-
-
 
 
     }

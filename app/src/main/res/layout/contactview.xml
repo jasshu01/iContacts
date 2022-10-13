@@ -9,27 +9,48 @@
         android:id="@+id/contactName"
         android:layout_width="189dp"
         android:layout_height="38dp"
-        android:layout_marginStart="24dp"
+        android:layout_marginStart="120dp"
         android:text="TextView"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/displayPic"
-        app:layout_constraintTop_toTopOf="@+id/displayPic" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/displayPic"
-        android:layout_width="101dp"
-        android:layout_height="103dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/person" />
+
+    <TextView
+        android:id="@+id/displayText"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="0dp"
+        android:background="#DF8383"
+        android:backgroundTint="#C7AAAA"
+        android:gravity="center"
+        android:text="A"
+        android:textSize="34sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
         android:id="@+id/fav"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
         app:layout_constraintBottom_toBottomOf="@+id/contactName"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.606"
         app:layout_constraintStart_toEndOf="@+id/contactName"
         app:layout_constraintTop_toTopOf="@+id/contactName"
         app:srcCompat="@drawable/fav_borderd" />

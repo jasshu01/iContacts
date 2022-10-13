@@ -7,8 +7,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Handler;
 import android.os.Parcelable;
 import android.util.Log;
@@ -25,12 +27,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.internal.TextDrawableHelper;
 
+import org.w3c.dom.Text;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Random;
 
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
 
@@ -45,7 +51,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final TextView textView;
         private static ImageView fav, displayPic;
-
+        private static TextView displayText;
 
         public ViewHolder(View view) {
             super(view);
@@ -55,6 +61,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
 
             fav = (ImageView) view.findViewById(R.id.fav);
             displayPic = (ImageView) view.findViewById(R.id.displayPic);
+            displayText = (TextView) view.findViewById(R.id.displayText);
 
 
         }
@@ -65,13 +72,16 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         }
 
 
-
         public ImageView getFavImageView() {
             return fav;
         }
 
         public ImageView getDisplapPic() {
             return displayPic;
+        }
+
+        public TextView getDisplapText() {
+            return displayText;
         }
 
 
@@ -129,19 +139,28 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         ImageView img = viewHolder.getFavImageView();
 
         ImageView displayPic = viewHolder.getDisplapPic();
+        TextView displayText = viewHolder.getDisplapText();
+
         displayPic.setImageResource(R.drawable.person);
 //        displayPic.setImageResource(R.drawable.letter_a);
 //            displayPic.setImageBitmap( );
-        String filename=localDataSet.get(position).getFirstName()+localDataSet.get(position).getLastName()+localDataSet.get(position).getPhone1();
+        String filename = localDataSet.get(position).getFirstName() + localDataSet.get(position).getLastName() + localDataSet.get(position).getPhone1();
         try {
-            File f=new File("/data/user/0/com.example.icontacts/app_imageDir", filename+".jpg");
+            File f = new File("/data/user/0/com.example.icontacts/app_imageDir", filename + ".jpg");
             Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
-
             displayPic.setImageBitmap(b);
-        }
-        catch (FileNotFoundException e)
-        {
-            Log.d("imagepick","error");
+            displayText.setVisibility(View.GONE);
+        } catch (FileNotFoundException e) {
+
+            displayPic.setVisibility(View.GONE);
+            String firstLetter = (String) localDataSet.get(position).getFirstName().subSequence(0, 1);
+            firstLetter=firstLetter.toUpperCase();
+            displayText.setText(firstLetter);
+            Random randomBackgroundColor = new Random();
+            int color = Color.argb(randomBackgroundColor.nextInt(256), randomBackgroundColor.nextInt(256), randomBackgroundColor.nextInt(256), randomBackgroundColor.nextInt(256));
+            displayText.setBackgroundColor(color);
+
+            Log.d("imagepick", "error");
             e.printStackTrace();
         }
 

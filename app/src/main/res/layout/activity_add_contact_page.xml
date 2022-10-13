@@ -27,16 +27,16 @@
 
             <ImageView
                 android:id="@+id/contactImage"
-                android:layout_width="196dp"
-                android:layout_height="0dp"
+                android:layout_width="194dp"
+                android:layout_height="186dp"
                 android:layout_marginTop="35dp"
                 android:layout_marginBottom="18dp"
+                android:contentDescription="TODO"
                 app:layout_constraintBottom_toTopOf="@+id/firstName"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/person"
-                android:contentDescription="TODO" />
+                app:srcCompat="@drawable/person" />
 
             <EditText
                 android:id="@+id/firstName"
@@ -127,6 +127,22 @@
                 android:text="Save"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/cancelButton" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/editContactImage"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="#51B41616"
+                android:clickable="true"
+                android:foregroundGravity="center_vertical|center|center_horizontal|fill"
+                app:backgroundTint="#2DE8EDE5"
+                app:layout_constraintBottom_toBottomOf="@+id/contactImage"
+                app:layout_constraintEnd_toEndOf="@+id/contactImage"
+                app:layout_constraintHorizontal_bias="0.783"
+                app:layout_constraintStart_toEndOf="@+id/contactImage"
+                app:layout_constraintTop_toBottomOf="@+id/contactImage"
+                app:layout_constraintVertical_bias="0.783"
+                app:srcCompat="@drawable/editcontact" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

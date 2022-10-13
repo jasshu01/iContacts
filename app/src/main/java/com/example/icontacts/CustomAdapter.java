@@ -4,6 +4,11 @@ package com.example.icontacts;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.ColorFilter;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Parcelable;
 import android.util.Log;
@@ -14,8 +19,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.internal.TextDrawableHelper;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,14 +44,17 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
      */
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final TextView textView;
-        private static ImageView fav;
+        private static ImageView fav, displayPic;
+
 
         public ViewHolder(View view) {
             super(view);
             // Define click listener for the ViewHolder's View
             view.setOnClickListener(this);
             textView = (TextView) view.findViewById(R.id.contactName);
+
             fav = (ImageView) view.findViewById(R.id.fav);
+            displayPic = (ImageView) view.findViewById(R.id.displayPic);
 
 
         }
@@ -49,8 +64,14 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
             return textView;
         }
 
-        public ImageView getImageView() {
+
+
+        public ImageView getFavImageView() {
             return fav;
+        }
+
+        public ImageView getDisplapPic() {
+            return displayPic;
         }
 
 
@@ -99,15 +120,30 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     }
 
     // Replace the contents of a view (invoked by the layout manager)
+    @SuppressLint("ResourceType")
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, @SuppressLint("RecyclerView") final int position) {
 
-        // Get element from your dataset at this position and replace the
-        // contents of the view with that element
-
 
         viewHolder.getTextView().setText(localDataSet.get(position).getFirstName());
-        ImageView img = viewHolder.getImageView();
+        ImageView img = viewHolder.getFavImageView();
+
+        ImageView displayPic = viewHolder.getDisplapPic();
+        displayPic.setImageResource(R.drawable.person);
+//        displayPic.setImageResource(R.drawable.letter_a);
+//            displayPic.setImageBitmap( );
+        String filename=localDataSet.get(position).getFirstName()+localDataSet.get(position).getLastName()+localDataSet.get(position).getPhone1();
+        try {
+            File f=new File("/data/user/0/com.example.icontacts/app_imageDir", filename+".jpg");
+            Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
+
+            displayPic.setImageBitmap(b);
+        }
+        catch (FileNotFoundException e)
+        {
+            Log.d("imagepick","error");
+            e.printStackTrace();
+        }
 
 
         if (localDataSet.get(position).isFav() == 1) {
@@ -122,7 +158,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
             public void onClick(View view) {
 
                 dbHandler handler = new dbHandler(context, "Contacts", null, 1);
-                img.setImageResource(R.drawable.fav);
+
                 if (localDataSet.get(position).isFav() == 0) {
                     img.setImageResource(R.drawable.fav);
                     localDataSet.get(position).setFav(1);

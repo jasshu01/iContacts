@@ -3,6 +3,7 @@ pluginManagement {
         gradlePluginPortal()
         google()
         mavenCentral()
+//        maven { url 'http://dl.bintray.com/amulyakhare/maven' }
     }
 }
 dependencyResolutionManagement {
@@ -10,6 +11,8 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+//        maven(http:bintray.com/amulyakhare/maven)
+//        maven ('http://dl.bintray.com/amulyakhare/maven' )
     }
 }
 rootProject.name = "iContacts"

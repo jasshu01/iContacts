@@ -210,12 +210,12 @@ public class ContactInfo extends AppCompatActivity {
             message2.setVisibility(View.GONE);
         }
 
+        Toast.makeText(this, lastName, Toast.LENGTH_SHORT).show();
 
-        int index = 1;
-        textViewArray[index++].setText(lastName);
-        textViewArray[index++].setText(phone1);
-        textViewArray[index++].setText(phone2);
-        textViewArray[index].setText(email);
+        textViewArray[1].setText(lastName);
+        textViewArray[2].setText(phone1);
+        textViewArray[3].setText(phone2);
+        textViewArray[4].setText(email);
 
 
     }

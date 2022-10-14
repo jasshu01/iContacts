@@ -4,6 +4,7 @@ package com.example.icontacts;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -152,11 +153,13 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
 
             displayPic.setVisibility(View.GONE);
             String firstLetter = (String) localDataSet.get(position).getFirstName().subSequence(0, 1);
-            firstLetter=firstLetter.toUpperCase();
+            firstLetter = firstLetter.toUpperCase();
             displayText.setText(firstLetter);
             Random randomBackgroundColor = new Random();
             int color = Color.argb(randomBackgroundColor.nextInt(256), randomBackgroundColor.nextInt(256), randomBackgroundColor.nextInt(256), randomBackgroundColor.nextInt(256));
-            displayText.setBackgroundColor(color);
+//            displayText.setBackgroundColor(color);
+            displayText.setBackgroundTintList(ColorStateList.valueOf(color));
+
 
             Log.d("imagepick", "error");
             e.printStackTrace();

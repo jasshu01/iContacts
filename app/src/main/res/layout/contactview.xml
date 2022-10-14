@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="100dp">
+    android:layout_height="100dp"
+    android:layout_margin="10dp">
 
     <TextView
         android:id="@+id/contactName"
@@ -20,28 +21,32 @@
         android:id="@+id/displayPic"
         android:layout_width="100dp"
         android:layout_height="100dp"
+        android:background="@drawable/rounded_corners"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/person" />
+       />
 
     <TextView
         android:id="@+id/displayText"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_marginStart="0dp"
-        android:background="#DF8383"
+        android:background="@drawable/rounded_corners"
         android:backgroundTint="#C7AAAA"
         android:gravity="center"
         android:text="A"
+
         android:textSize="34sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+
         app:layout_constraintVertical_bias="0.0" />
+
+    />
 
     <ImageView
         android:id="@+id/fav"

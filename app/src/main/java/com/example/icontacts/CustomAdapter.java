@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.internal.TextDrawableHelper;
@@ -43,6 +44,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
 
     private static ArrayList<Contact> localDataSet;
     private static Context context;
+    private static CardView cardView;
 
 
     /**
@@ -63,6 +65,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
             fav = (ImageView) view.findViewById(R.id.fav);
             displayPic = (ImageView) view.findViewById(R.id.displayPic);
             displayText = (TextView) view.findViewById(R.id.displayText);
+            cardView = (CardView) view.findViewById(R.id.cardView);
 
 
         }
@@ -70,6 +73,10 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
 
         public TextView getTextView() {
             return textView;
+        }
+
+        public CardView getCardView() {
+            return cardView;
         }
 
 
@@ -157,9 +164,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
             displayText.setText(firstLetter);
             Random randomBackgroundColor = new Random();
             int color = Color.argb(randomBackgroundColor.nextInt(256), randomBackgroundColor.nextInt(256), randomBackgroundColor.nextInt(256), randomBackgroundColor.nextInt(256));
-//            displayText.setBackgroundColor(color);
-            displayText.setBackgroundTintList(ColorStateList.valueOf(color));
-
+            displayText.setBackgroundColor(color);
 
             Log.d("imagepick", "error");
             e.printStackTrace();

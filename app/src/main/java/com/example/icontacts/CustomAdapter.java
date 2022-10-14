@@ -108,6 +108,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
             intent.putExtra("phone1", localDataSet.get(position).getPhone1());
             intent.putExtra("phone2", localDataSet.get(position).getPhone2());
             intent.putExtra("email", localDataSet.get(position).getEmail());
+            intent.putExtra("fav", localDataSet.get(position).isFav());
 //            intent.putExtra("Contacts", localDataSet);
             context.startActivity(intent);
 

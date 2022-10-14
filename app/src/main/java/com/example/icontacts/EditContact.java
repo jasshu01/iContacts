@@ -14,7 +14,7 @@ import android.widget.Toast;
 public class EditContact extends AppCompatActivity {
     EditText editFirstName, editLastName, editPhone1, editPhone2, editEmail;
     Button editCancelbtn, editUpdatebtn;
-    int sno;
+    int sno,fav;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,11 +33,13 @@ public class EditContact extends AppCompatActivity {
 
 //        Toast.makeText(this, intent.getStringExtra("phone1"), Toast.LENGTH_SHORT).show();
         sno = intent.getIntExtra("sno",-1);
+        fav = intent.getIntExtra("fav",-1);
         editFirstName.setText(intent.getStringExtra("firstName"));
         editLastName.setText(intent.getStringExtra("lastName"));
         editPhone1.setText(intent.getStringExtra("phone1"));
         editPhone2.setText(intent.getStringExtra("phone2"));
         editEmail.setText(intent.getStringExtra("email"));
+
 
 
         editCancelbtn.setOnClickListener(new View.OnClickListener() {
@@ -57,6 +59,7 @@ public class EditContact extends AppCompatActivity {
                 contact.setPhone1(String.valueOf(editPhone1.getText()));
                 contact.setPhone2(String.valueOf(editPhone2.getText()));
                 contact.setEmail(String.valueOf(editEmail.getText()));
+                contact.setFav(fav);
 
                 dbHandler handler= new dbHandler(EditContact.this,"Contacts",null,1);
                 handler.updateContact(contact);

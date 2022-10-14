@@ -30,7 +30,7 @@ public class ContactInfo extends AppCompatActivity {
     ImageView deleteContact, shareContact, editContact, call1, call2, message1, message2,contactInfoPic;
     String firstName, lastName, phone1, phone2, email;
     TextView contactInfoDisplayText;
-    int sno;
+    int sno,fav;
 
 
     @SuppressLint({"ResourceType", "MissingInflatedId"})
@@ -41,6 +41,7 @@ public class ContactInfo extends AppCompatActivity {
         Intent intent = getIntent();
 
         sno = intent.getIntExtra("sno", -1);
+        fav = intent.getIntExtra("fav", -1);
 
 
         if (sno == -1)
@@ -143,6 +144,7 @@ public class ContactInfo extends AppCompatActivity {
                 intent1.putExtra("phone1", phone1);
                 intent1.putExtra("phone2", phone2);
                 intent1.putExtra("email", email);
+                intent1.putExtra("fav", fav);
 
 
                 startActivity(intent1);

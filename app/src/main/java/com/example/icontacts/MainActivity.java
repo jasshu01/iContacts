@@ -95,23 +95,40 @@ public class MainActivity extends AppCompatActivity {
             contactsArr.sort(Contact.contactsComparator);
         }
 
-        for (int i = 0; i < contactsArr.size(); i++) {
-            Log.d("GetId",String.valueOf(contactsArr.get(i).getSno()));
-            Log.d("GetId",contactsArr.get(i).getFirstName());
-            Log.d("GetId",String.valueOf(contactsArr.get(i).isFav()));
-        }
 
-//        handler.deleteContact(3);
-//        handler.deleteContact(4);
-//        handler.deleteContact(5);
-//
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
 
-//        if(contactsArr.size()!=0)
-//        {
+            @Override
+            public boolean onQueryTextChange(String filter) {
+                ArrayList<Contact> filteredlist = new ArrayList<Contact>();
+
+                // running a for loop to compare elements.
+                for (Contact item : contactsArr) {
+                    if (item.getFirstName().toLowerCase().contains(filter.toLowerCase())) {
+                        filteredlist.add(item);
+                    }
+                }
+                CustomAdapter ca = new CustomAdapter(MainActivity.this, filteredlist);
+                recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+                recyclerView.setAdapter(ca);
+                if (filteredlist.isEmpty()) {
+
+                    Toast.makeText(MainActivity.this, "No Data Found..", Toast.LENGTH_SHORT).show();
+                }
+
+                return false;
+            }
+        });
+
+
         CustomAdapter ca = new CustomAdapter(MainActivity.this, contactsArr);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(ca);
-//        }
+
 
     }
 

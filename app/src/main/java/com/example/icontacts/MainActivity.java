@@ -83,11 +83,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         dbHandler handler = new dbHandler(MainActivity.this, "Contacts", null, 1);
-//        handler.addContact(new Contact("jasshu", "8195850098"));
-//        handler.addContact(new Contact("shivam", "8195850098"));
-//        handler.addContact(new Contact("abhay", "8195850098"));
-//        handler.addContact(new Contact("raghav", "8195850098"));
-//        handler.addContact(new Contact("tanishq", "8195850098"));
 
 
         contactsArr = handler.allContacts();

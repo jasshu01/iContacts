@@ -95,7 +95,7 @@ public class addContactPage extends AppCompatActivity {
 
                 dbHandler handler = new dbHandler(addContactPage.this, "Contacts", null, 1);
 
-                if (handler.addContact(contact)) {
+                if (handler.addContact(contact,addContactPage.this)) {
                     Toast.makeText(addContactPage.this, "Contact Saved", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(addContactPage.this, MainActivity.class);
                     startActivity(intent);

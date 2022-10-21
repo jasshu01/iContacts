@@ -39,7 +39,7 @@ public class dbHandler extends SQLiteOpenHelper {
     }
 
 
-    public boolean addContact(Contact contact) {
+    public boolean addContact(Contact contact,Context context) {
 
         SQLiteDatabase db = getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -52,6 +52,7 @@ public class dbHandler extends SQLiteOpenHelper {
 
 
         if (contact_Phone1.length() == 0) {
+            Toast.makeText(context, "Add valid Phone Number", Toast.LENGTH_SHORT).show();
             return false;
         }
 
@@ -91,6 +92,40 @@ public class dbHandler extends SQLiteOpenHelper {
         }
 
 
+        ArrayList<Contact> allContact=allContacts();
+
+        for (Contact item : allContact) {
+
+            if (item.getFirstName().toLowerCase().equals(contact.getFirstName().toLowerCase()))
+            {
+                Toast.makeText(context, "Same Name already exists", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+
+            if(contact.getPhone1().length()!=0)
+            {
+                if (item.getPhone1().equals(contact.getPhone1()) ||
+                        item.getPhone2().equals(contact.getPhone1()))
+                {
+                    Toast.makeText(context, "Same Phone already exists", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+
+            }
+            if(contact.getPhone2().length()!=0)
+            {
+                if (item.getPhone2().equals(contact.getPhone2()) ||
+                        item.getPhone1().equals(contact.getPhone2()))
+                {
+                    Toast.makeText(context, "Same Phone already exists", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+
+            }
+
+        }
+
+
         contentValues.put("firstName", contact.getFirstName());
         contentValues.put("lastName", contact.getLastName());
         contentValues.put("phone1", contact.getPhone1());
@@ -104,26 +139,6 @@ public class dbHandler extends SQLiteOpenHelper {
         Log.d("adding", "addContact: " + k);
         return true;
     }
-
-//    public Contact accessContacts(int sno) {
-//
-//        SQLiteDatabase db = getReadableDatabase();
-//
-//        Cursor cursor = db.query("Contacts", new String[]{"sno", "firstName", "lastName", "phone1", "phone2", "email"}, "sno=?", new String[]{String.valueOf(sno)}, null, null, null, null);
-//
-//        if (cursor != null && cursor.moveToFirst()) {
-//
-//            Contact contact = new Contact(cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5));
-//            return contact;
-//
-//        } else {
-//            Log.d("mytag", "some error ");
-//
-//        }
-//
-//        return null;
-//
-//    }
 
     public ArrayList<Contact> allContacts() {
         ArrayList<Contact> contactsArr = new ArrayList<>();

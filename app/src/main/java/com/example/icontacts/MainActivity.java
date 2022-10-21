@@ -108,7 +108,12 @@ public class MainActivity extends AppCompatActivity {
 
                 // running a for loop to compare elements.
                 for (Contact item : contactsArr) {
-                    if (item.getFirstName().toLowerCase().contains(filter.toLowerCase())) {
+                    if (item.getFirstName().toLowerCase().contains(filter.toLowerCase()) ||
+                            item.getLastName().toLowerCase().contains(filter.toLowerCase()) ||
+                            item.getPhone1().toLowerCase().contains(filter.toLowerCase()) ||
+                            item.getEmail().toLowerCase().contains(filter.toLowerCase()) ||
+                            item.getPhone2().toLowerCase().contains(filter.toLowerCase())  )
+                    {
                         filteredlist.add(item);
                     }
                 }

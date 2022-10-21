@@ -5,6 +5,7 @@ import java.util.Comparator;
 public class Contact {
     private String firstName, lastName, phone1, phone2, email;
     private int sno;
+
     private int fav;
 
     public int isFav() {

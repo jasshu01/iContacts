@@ -100,7 +100,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
             int position = getAdapterPosition();
             Intent intent = new Intent(context, ContactInfo.class);
 
-            Toast.makeText(context, String.valueOf(position), Toast.LENGTH_SHORT).show();
+//            Toast.makeText(context, String.valueOf(position), Toast.LENGTH_SHORT).show();
 
             intent.putExtra("sno", localDataSet.get(position).getSno());
             intent.putExtra("firstName", localDataSet.get(position).getFirstName());

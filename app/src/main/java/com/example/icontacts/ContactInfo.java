@@ -98,7 +98,7 @@ public class ContactInfo extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Toast.makeText(ContactInfo.this, "Deleting", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(ContactInfo.this, "Deleting", Toast.LENGTH_SHORT).show();
                 dbHandler handler = new dbHandler(ContactInfo.this, "Contacts", null, 1);
                 handler.deleteContact(sno);
                 Intent intent1 = new Intent(ContactInfo.this, MainActivity.class);
@@ -114,9 +114,11 @@ public class ContactInfo extends AppCompatActivity {
 
                 String myMessage = "";
                 if (firstName != phone1)
-                    myMessage = firstName;
+                    myMessage = firstName ;
                 if (lastName.length() != 0)
-                    myMessage += " " + lastName + "\n";
+                    myMessage += " " + lastName ;
+
+                myMessage+="\n";
                 if (phone1.length() != 0)
                     myMessage += phone1 + "\n";
                 if (phone2.length() != 0)
@@ -210,7 +212,7 @@ public class ContactInfo extends AppCompatActivity {
             message2.setVisibility(View.GONE);
         }
 
-        Toast.makeText(this, lastName, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, lastName, Toast.LENGTH_SHORT).show();
 
         textViewArray[1].setText(lastName);
         textViewArray[2].setText(phone1);

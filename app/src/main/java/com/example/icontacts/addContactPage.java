@@ -9,15 +9,19 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.app.Activity;
 import android.app.VoiceInteractor;
+import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -79,23 +83,21 @@ public class addContactPage extends AppCompatActivity {
                 contact_Phone2 = String.valueOf(contactPhone2.getText());
                 contact_Email = String.valueOf(contactEmail.getText());
 
+                Bitmap photo = null;
                 try {
-                    Bitmap photo = ((BitmapDrawable) contactImage.getDrawable()).getBitmap();
-                    String location = saveToInternalStorage(photo, contact_firstName + contact_lastName + contact_Phone1);
-                    Log.d("bitmapdata", "onActivityResult: " + location +contact_firstName + contact_lastName + contact_Phone1 );
-                }
-                catch (Exception e)
-                {
+                    photo = ((BitmapDrawable) contactImage.getDrawable()).getBitmap();
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
-
 
                 Contact contact = new Contact(contact_firstName, contact_lastName, contact_Phone1, contact_Phone2, contact_Email);
 
 
                 dbHandler handler = new dbHandler(addContactPage.this, "Contacts", null, 1);
 
-                if (handler.addContact(contact,addContactPage.this)) {
+                if (handler.addContact(contact, addContactPage.this, photo)) {
+
+
                     Toast.makeText(addContactPage.this, "Contact Saved", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(addContactPage.this, MainActivity.class);
                     startActivity(intent);
@@ -124,44 +126,23 @@ public class addContactPage extends AppCompatActivity {
         editContactImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-                if (intent.resolveActivity(getPackageManager()) != null) {
-                    activityResultLauncher.launch(intent);
-                } else {
-                    Toast.makeText(addContactPage.this, "service not available", Toast.LENGTH_SHORT).show();
-                }
+
+
+                    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    try {
+                        activityResultLauncher.launch(takePictureIntent);
+                    } catch (ActivityNotFoundException e) {
+                        // display error state to the user
+                        Toast.makeText(addContactPage.this, "Nothing happend", Toast.LENGTH_SHORT).show();
+                    }
+
+
+
 
             }
 
         });
-    }
-
-    private String saveToInternalStorage(Bitmap bitmapImage, String filename) {
-        ContextWrapper cw = new ContextWrapper(getApplicationContext());
-        // path to /data/data/yourapp/app_data/imageDir
-        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
-        // Create imageDir
-        File mypath = new File(directory, filename + ".jpg");
-
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(mypath);
-            // Use the compress method on the BitMap object to write image to the OutputStream
-            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                fos.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        Log.d("address", directory.getAbsolutePath());
-        return directory.getAbsolutePath();
     }
 
 

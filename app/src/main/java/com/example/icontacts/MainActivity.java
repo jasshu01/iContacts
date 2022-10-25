@@ -13,28 +13,33 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
 import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.karumi.dexter.listener.single.PermissionListener;
 
 import java.security.Permission;
 import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
     SearchView searchView;
-    ImageView addContact;
+    ImageView addContact , showOptions;
 
     ArrayList<Contact> contactsArr = new ArrayList<>();
 
@@ -47,30 +52,74 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerView);
         searchView = findViewById(R.id.searchView);
         addContact = findViewById(R.id.addContact);
+        showOptions = findViewById(R.id.showOptions);
 
 
         Dexter.withContext(this)
-                .withPermission(Manifest.permission.CALL_PHONE)
-                .withListener(new PermissionListener() {
-                    @Override
-                    public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
+                .withPermissions(
+                        Manifest.permission.CAMERA,
+                        Manifest.permission.CALL_PHONE
+                ).withListener(new MultiplePermissionsListener() {
+                    @Override public void onPermissionsChecked(MultiplePermissionsReport report) {/* ... */}
+                    @Override public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {token.continuePermissionRequest();}
+                }).check();
 
-                    }
+//
+//        Dexter.withContext(this)
+//                .withPermissions(Manifest.permission.CALL_PHONE,
+//                        Manifest.permission.CAMERA)
+//                .withListener(new PermissionListener() {
+//                    @Override
+//                    public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onPermissionRationaleShouldBeShown(PermissionRequest permissionRequest, PermissionToken permissionToken) {
+//                    permissionToken.continuePermissionRequest();
+//                    }
+//                })
+//                .check();
 
-                    @Override
-                    public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
-
-                    }
-
-                    @Override
-                    public void onPermissionRationaleShouldBeShown(PermissionRequest permissionRequest, PermissionToken permissionToken) {
-                    permissionToken.continuePermissionRequest();
-                    }
-                })
-                .check();
 
 
+//        Dexter.withContext(this)
+//                .withPermission(Manifest.permission.CAMERA)
+//                .withListener(new PermissionListener() {
+//                    @Override
+//                    public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onPermissionRationaleShouldBeShown(PermissionRequest permissionRequest, PermissionToken permissionToken) {
+//                    permissionToken.continuePermissionRequest();
+//                    }
+//                })
+//                .check();
 
+
+
+
+        showOptions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PopupMenu popup = new PopupMenu(MainActivity.this, view);
+                MenuInflater inflater = popup.getMenuInflater();
+                inflater.inflate(R.menu.actions, popup.getMenu());
+                popup.show();
+            }
+        });
 
 
 
@@ -101,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onQueryTextChange(String filter) {
                 ArrayList<Contact> filteredlist = new ArrayList<Contact>();
 
-                // running a for loop to compare elements.
+
                 for (Contact item : contactsArr) {
                     if (item.getFirstName().toLowerCase().contains(filter.toLowerCase()) ||
                             item.getLastName().toLowerCase().contains(filter.toLowerCase()) ||

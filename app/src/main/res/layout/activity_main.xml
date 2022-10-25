@@ -18,14 +18,15 @@
 
     <SearchView
         android:id="@+id/searchView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="246dp"
+        android:layout_height="58dp"
         android:layout_marginTop="3dp"
         android:scrollbarSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/recyclerView"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/showOptions"
         app:layout_constraintStart_toEndOf="@+id/addContact"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.2" />
 
     <ImageView
         android:id="@+id/addContact"
@@ -39,4 +40,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/add_icon" />
+
+    <ImageView
+        android:id="@+id/showOptions"
+        android:layout_width="61dp"
+        android:layout_height="54dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/recyclerView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="@drawable/more_vertical" />
 </androidx.constraintlayout.widget.ConstraintLayout>

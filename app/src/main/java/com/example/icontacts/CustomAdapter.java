@@ -151,7 +151,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         TextView displayText = viewHolder.getDisplapText();
 
         displayPic.setImageResource(R.drawable.person);
-        String filename = localDataSet.get(position).getFirstName() + localDataSet.get(position).getLastName() + localDataSet.get(position).getPhone1();
+        String filename = String.valueOf(localDataSet.get(position).getSno());
         try {
             File f = new File("/data/user/0/com.example.icontacts/app_imageDir", filename + ".jpg");
             Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));

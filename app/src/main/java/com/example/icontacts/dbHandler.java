@@ -1,19 +1,20 @@
 package com.example.icontacts;
 
-import static android.content.ContentValues.TAG;
-
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.database.Cursor;
-import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class dbHandler extends SQLiteOpenHelper {
@@ -39,7 +40,7 @@ public class dbHandler extends SQLiteOpenHelper {
     }
 
 
-    public boolean addContact(Contact contact,Context context) {
+    public boolean addContact(Contact contact, Context context, Bitmap photo) {
 
         SQLiteDatabase db = getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -126,6 +127,7 @@ public class dbHandler extends SQLiteOpenHelper {
         }
 
 
+
         contentValues.put("firstName", contact.getFirstName());
         contentValues.put("lastName", contact.getLastName());
         contentValues.put("phone1", contact.getPhone1());
@@ -134,6 +136,13 @@ public class dbHandler extends SQLiteOpenHelper {
         contentValues.put("fav", 0);
 
         long k = db.insert("Contacts", null, contentValues);
+
+
+        if(photo!=null)
+        {
+            saveToInternalStorage(photo, String.valueOf(k),context);
+        }
+
 
         db.close();
         Log.d("adding", "addContact: " + k);
@@ -189,6 +198,33 @@ public class dbHandler extends SQLiteOpenHelper {
         db.update("Contacts", contentValues, "sno=?", new String[]{String.valueOf(contact.getSno())});
 
 
+    }
+
+
+    private String saveToInternalStorage(Bitmap bitmapImage, String filename,Context context) {
+        ContextWrapper cw = new ContextWrapper(context.getApplicationContext());
+        // path to /data/data/yourapp/app_data/imageDir
+        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
+        // Create imageDir
+        File mypath = new File(directory, filename + ".jpg");
+
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(mypath);
+            // Use the compress method on the BitMap object to write image to the OutputStream
+            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        Log.d("address", directory.getAbsolutePath());
+        return directory.getAbsolutePath();
     }
 
 

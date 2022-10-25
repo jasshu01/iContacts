@@ -57,59 +57,14 @@ public class MainActivity extends AppCompatActivity {
 
         Dexter.withContext(this)
                 .withPermissions(
-                        Manifest.permission.CAMERA,
-                        Manifest.permission.CALL_PHONE
+
+                        Manifest.permission.CALL_PHONE,
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
                 ).withListener(new MultiplePermissionsListener() {
                     @Override public void onPermissionsChecked(MultiplePermissionsReport report) {/* ... */}
                     @Override public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {token.continuePermissionRequest();}
                 }).check();
-
-//
-//        Dexter.withContext(this)
-//                .withPermissions(Manifest.permission.CALL_PHONE,
-//                        Manifest.permission.CAMERA)
-//                .withListener(new PermissionListener() {
-//                    @Override
-//                    public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onPermissionRationaleShouldBeShown(PermissionRequest permissionRequest, PermissionToken permissionToken) {
-//                    permissionToken.continuePermissionRequest();
-//                    }
-//                })
-//                .check();
-
-
-
-//        Dexter.withContext(this)
-//                .withPermission(Manifest.permission.CAMERA)
-//                .withListener(new PermissionListener() {
-//                    @Override
-//                    public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onPermissionRationaleShouldBeShown(PermissionRequest permissionRequest, PermissionToken permissionToken) {
-//                    permissionToken.continuePermissionRequest();
-//                    }
-//                })
-//                .check();
-
-
-
 
         showOptions.setOnClickListener(new View.OnClickListener() {
             @Override

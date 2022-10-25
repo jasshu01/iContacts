@@ -1,5 +1,7 @@
 package com.example.icontacts;
 
+import static android.content.Intent.ACTION_GET_CONTENT;
+
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -30,10 +32,13 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -47,7 +52,7 @@ public class addContactPage extends AppCompatActivity {
     EditText firstName, lastName, contactPhone1, contactPhone2, contactEmail;
     ImageView contactImage;
     FloatingActionButton editContactImage;
-    ActivityResultLauncher<Intent> activityResultLauncher;
+    ActivityResultLauncher<Intent> activityResultLauncher_capture,activityResultLauncher_choose;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,7 +112,7 @@ public class addContactPage extends AppCompatActivity {
             }
         });
 
-        activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+        activityResultLauncher_capture = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
             @Override
             public void onActivityResult(ActivityResult result) {
                 if (result.getResultCode() == RESULT_OK && result.getData() != null) {
@@ -118,9 +123,27 @@ public class addContactPage extends AppCompatActivity {
                     contactImage.setImageBitmap(photo);
                 }
 
-
             }
         });
+
+         activityResultLauncher_choose = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent data = result.getData();
+
+                        if (data != null && data.getData() != null) {
+                            Uri selectedImageUri = data.getData();
+                            Bitmap selectedImageBitmap;
+                            try {
+                                selectedImageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(),selectedImageUri);
+                                contactImage.setImageBitmap(selectedImageBitmap);
+                            }
+                            catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                    }
+                });
 
 
         editContactImage.setOnClickListener(new View.OnClickListener() {
@@ -128,14 +151,48 @@ public class addContactPage extends AppCompatActivity {
             public void onClick(View view) {
 
 
+                        PopupMenu popup = new PopupMenu(addContactPage.this, view);
+                        MenuInflater inflater = popup.getMenuInflater();
+                        inflater.inflate(R.menu.ask_camera_or_storage, popup.getMenu());
+                        popup.show();
 
-                    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    try {
-                        activityResultLauncher.launch(takePictureIntent);
-                    } catch (ActivityNotFoundException e) {
-                        // display error state to the user
-                        Toast.makeText(addContactPage.this, "Nothing happend", Toast.LENGTH_SHORT).show();
-                    }
+
+                        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                            @Override
+                            public boolean onMenuItemClick(MenuItem menuItem) {
+
+                                switch (menuItem.getItemId())
+                                {
+                                    case R.id.captureImage:
+                                        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                                        try {
+                                            activityResultLauncher_capture.launch(takePictureIntent);
+                                        } catch (ActivityNotFoundException e) {
+                                            Toast.makeText(addContactPage.this, "Enable Camera Permission", Toast.LENGTH_SHORT).show();
+                                        }
+                                        break;
+                                    case R.id.chooseFromStorage:
+                                        Intent choosePictureIntent = new Intent();
+                                        choosePictureIntent.setType("image/*");
+                                        choosePictureIntent.setAction(Intent.ACTION_GET_CONTENT);
+                                        try {
+                                            activityResultLauncher_choose.launch(choosePictureIntent);
+                                        } catch (ActivityNotFoundException e) {
+                                            Toast.makeText(addContactPage.this, "Enable Storage Permission", Toast.LENGTH_SHORT).show();
+                                        }
+                                        break;
+                                    default:
+                                        return false;
+                                }
+
+                                return true;
+
+                            }
+                        });
+
+
+
+
 
 
 

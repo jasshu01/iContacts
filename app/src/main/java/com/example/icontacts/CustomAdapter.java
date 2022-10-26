@@ -127,7 +127,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     public void onBindViewHolder(ViewHolder viewHolder, @SuppressLint("RecyclerView") final int position) {
 
 
-        viewHolder.getTextView().setText(localDataSet.get(position).getFirstName());
+        viewHolder.getTextView().setText(localDataSet.get(position).getFirstName()+" "+localDataSet.get(position).getLastName());
         ImageView img = viewHolder.getFavImageView();
 
         ImageView displayPic = viewHolder.getDisplapPic();

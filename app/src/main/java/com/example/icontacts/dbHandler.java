@@ -52,7 +52,8 @@ public class dbHandler extends SQLiteOpenHelper {
         String contact_Email = contact.getEmail();
 
 
-        if (contact_Phone1.length() == 0) {
+
+        if (contact_Phone1.length() == 0 && contact_Phone2.length()==0) {
             Toast.makeText(context, "Add valid Phone Number", Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -97,7 +98,7 @@ public class dbHandler extends SQLiteOpenHelper {
 
         for (Contact item : allContact) {
 
-            if (item.getFirstName().toLowerCase().equals(contact.getFirstName().toLowerCase()))
+            if ((item.getFirstName().toLowerCase()+item.getLastName()).equals(contact.getFirstName().toLowerCase()+contact.getLastName().toLowerCase()))
             {
                 Toast.makeText(context, "Same Name already exists", Toast.LENGTH_SHORT).show();
                 return false;

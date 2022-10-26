@@ -3,11 +3,17 @@ package com.example.icontacts;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,8 +22,9 @@ import android.widget.PopupMenu;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,26 +34,17 @@ import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.Cell;
 
-
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -101,7 +99,21 @@ public class MainActivity extends AppCompatActivity {
                         switch (menuItem.getItemId()) {
                             case R.id.importContacts:
                                 Toast.makeText(MainActivity.this, "Importing Contacts", Toast.LENGTH_SHORT).show();
-//                                importContacts();
+                                try {
+
+                                    Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                                    intent.addCategory(Intent.CATEGORY_OPENABLE);
+                                    intent.setType("text/plain");
+
+                                    try {
+                                        activityResultLauncher_pickFile.launch(intent);
+                                    } catch (ActivityNotFoundException e) {
+
+                                    }
+
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                                 return true;
                             case R.id.exportContacts:
                                 try {
@@ -179,6 +191,79 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+    ActivityResultLauncher<Intent> activityResultLauncher_pickFile = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        if (result.getResultCode() == Activity.RESULT_OK) {
+            Intent data = result.getData();
+            Log.d("checking", "i am here: ");
+            if (data != null && data.getData() != null) {
+
+                try {
+                    InputStream in = getContentResolver().openInputStream(data.getData());
+                    BufferedReader r = new BufferedReader(new InputStreamReader(in));
+                    importContacts(r);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+    });
+
+
+    public void importContacts(BufferedReader br) throws Exception {
+
+        String line;
+
+        String fname = "", lname = "", p1 = "", p2 = "", email = "";
+        while ((line = br.readLine()) != null) {
+            String[] splitted = line.split(",");
+            fname = "";
+            lname = "";
+            p1 = "";
+            p2 = "";
+            email = "";
+
+            Log.d("importingContacts", "importContacts: " + line);
+
+            for (int i = 0; i < splitted.length; i++) {
+
+
+                if (splitted[i].contains("First")) {
+                    fname = String.valueOf(splitted[i].split(": ")[1]);
+
+                } else if (splitted[i].contains("Last")) {
+                    lname = String.valueOf(splitted[i].split(": ")[1]);
+
+                } else if (splitted[i].contains("Phone1")) {
+                    p1 = String.valueOf(splitted[i].split(": ")[1]);
+
+                } else if (splitted[i].contains("Phone2")) {
+                    p2 = String.valueOf(splitted[i].split(": ")[1]);
+                } else if (splitted[i].contains("Email")) {
+                    email = String.valueOf(splitted[i].split(": ")[1]);
+
+                }
+            }
+
+            Log.d("importContacts", "importContacts: "+fname+lname+p1+p2+email);
+            if (handler.addContact(new Contact(fname, lname, p1, p2, email), this, null)) {
+                Log.d("importingContacts", "importContacts: " + 1);
+            } else {
+                Log.d("importingContacts", "importContacts: " + 0);
+            }
+
+
+        }
+
+        Log.d("importingContacts", "new size: " + handler.allContacts().size());
+        Intent intent=new Intent(MainActivity.this,MainActivity.class);
+        startActivity(intent);
+
+
+    }
+
+
     public void exportContacts() throws IOException {
 
 
@@ -190,18 +275,22 @@ public class MainActivity extends AppCompatActivity {
 
         ArrayList<Contact> mycontacts = handler.allContacts();
 
-        for(int i=0;i< mycontacts.size();i++)
-        {
-            String contact="";
+        for (int i = 0; i < mycontacts.size(); i++) {
+            String contact = "";
 
-            if(mycontacts.get(i).getFirstName().length()!=0) contact+="First Name: "+mycontacts.get(i).getFirstName()+", ";
-            if(mycontacts.get(i).getLastName().length()!=0) contact+="Last Name: "+mycontacts.get(i).getLastName()+", ";
-            if(mycontacts.get(i).getPhone1().length()!=0)contact+="Phone1: "+mycontacts.get(i).getPhone1()+", ";
-            if(mycontacts.get(i).getPhone2().length()!=0)contact+="Phone2: "+mycontacts.get(i).getPhone2()+", ";
-            if(mycontacts.get(i).getEmail().length()!=0)contact+="Email: "+mycontacts.get(i).getEmail()+", ";
+            if (mycontacts.get(i).getFirstName().length() != 0)
+                contact += "First Name: " + mycontacts.get(i).getFirstName() + ", ";
+            if (mycontacts.get(i).getLastName().length() != 0)
+                contact += "Last Name: " + mycontacts.get(i).getLastName() + ", ";
+            if (mycontacts.get(i).getPhone1().length() != 0)
+                contact += "Phone1: " + mycontacts.get(i).getPhone1() + ", ";
+            if (mycontacts.get(i).getPhone2().length() != 0)
+                contact += "Phone2: " + mycontacts.get(i).getPhone2() + ", ";
+            if (mycontacts.get(i).getEmail().length() != 0)
+                contact += "Email: " + mycontacts.get(i).getEmail() + ", ";
 
 
-            mydata+=contact+"\n";
+            mydata += contact + "\n";
         }
 
         writeTextData(file, mydata);

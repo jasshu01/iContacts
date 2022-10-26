@@ -3,6 +3,7 @@ package com.example.icontacts;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -20,9 +21,11 @@ import java.util.ArrayList;
 public class dbHandler extends SQLiteOpenHelper {
 
     public long sNo = 1;
+    Context mainActivityContext;
 
     public dbHandler(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
+        mainActivityContext=context;
     }
 
 
@@ -98,8 +101,9 @@ public class dbHandler extends SQLiteOpenHelper {
 
         for (Contact item : allContact) {
 
-            if ((item.getFirstName().toLowerCase()+item.getLastName()).equals(contact.getFirstName().toLowerCase()+contact.getLastName().toLowerCase()))
+            if ((item.getFirstName().toLowerCase()+item.getLastName().toLowerCase()).equals(contact.getFirstName().toLowerCase()+contact.getLastName().toLowerCase()))
             {
+                if(context!=mainActivityContext)
                 Toast.makeText(context, "Same Name already exists", Toast.LENGTH_SHORT).show();
                 return false;
             }
@@ -109,7 +113,10 @@ public class dbHandler extends SQLiteOpenHelper {
                 if (item.getPhone1().equals(contact.getPhone1()) ||
                         item.getPhone2().equals(contact.getPhone1()))
                 {
-                    Toast.makeText(context, "Same Phone already exists", Toast.LENGTH_SHORT).show();
+
+//                    Log.d("importingContacts", "addContact: "+item.getPhone1()+","+item.getPhone2()+","+contact.getPhone1());
+                    if(context!=mainActivityContext)
+                    Toast.makeText(context, "Same Phone1 already exists", Toast.LENGTH_SHORT).show();
                     return false;
                 }
 
@@ -119,7 +126,8 @@ public class dbHandler extends SQLiteOpenHelper {
                 if (item.getPhone2().equals(contact.getPhone2()) ||
                         item.getPhone1().equals(contact.getPhone2()))
                 {
-                    Toast.makeText(context, "Same Phone already exists", Toast.LENGTH_SHORT).show();
+                    if(context!=mainActivityContext)
+                    Toast.makeText(context, "Same Phone2 already exists", Toast.LENGTH_SHORT).show();
                     return false;
                 }
 
@@ -147,6 +155,8 @@ public class dbHandler extends SQLiteOpenHelper {
 
         db.close();
         Log.d("adding", "addContact: " + k);
+
+
         return true;
     }
 

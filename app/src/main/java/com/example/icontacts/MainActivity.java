@@ -118,10 +118,12 @@ public class MainActivity extends AppCompatActivity {
                             case R.id.exportContacts:
                                 try {
                                     exportContacts();
+
+                                    Toast.makeText(MainActivity.this, "Exporting Contacts", Toast.LENGTH_SHORT).show();
                                 } catch (IOException e) {
                                     e.printStackTrace();
+                                    Log.d("exportingContacts", "onMenuItemClick: " + e.toString());
                                 }
-                                Toast.makeText(MainActivity.this, "Exporting Contacts", Toast.LENGTH_SHORT).show();
                                 return true;
                         }
 
@@ -225,7 +227,6 @@ public class MainActivity extends AppCompatActivity {
             email = "";
 
 
-
             for (int i = 0; i < splitted.length; i++) {
 
 
@@ -247,17 +248,17 @@ public class MainActivity extends AppCompatActivity {
             }
 
 //            Log.d("importContacts", "importContacts: "+fname+lname+p1+p2+email);
-//            if (handler.addContact(new Contact(fname, lname, p1, p2, email), this, null)) {
-//                Log.d("importingContacts", "importContacts: " + 1);
-//            } else {
-//                Log.d("importingContacts", "importContacts: " + 0);
-//            }
+            if (handler.addContact(new Contact(fname, lname, p1, p2, email), this, null)) {
+                Log.d("importingContacts", "importContacts: " + 1);
+            } else {
+                Log.d("importingContacts", "importContacts: " + 0);
+            }
 
 
         }
 
 
-        Intent intent=new Intent(MainActivity.this,MainActivity.class);
+        Intent intent = new Intent(MainActivity.this, MainActivity.class);
         startActivity(intent);
 
 
@@ -272,8 +273,11 @@ public class MainActivity extends AppCompatActivity {
 
         File file = new File(folder, "ExportedContacts.txt");
         String mydata = "";
-
+        writeTextData(file, "");
         ArrayList<Contact> mycontacts = handler.allContacts();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            mycontacts.sort(Contact.contactsComparator);
+        }
 
         for (int i = 0; i < mycontacts.size(); i++) {
             String contact = "";
@@ -292,7 +296,7 @@ public class MainActivity extends AppCompatActivity {
 
             mydata += contact + "\n";
         }
-
+        Log.d("exportingContacts", "exportContacts: " + mydata);
         writeTextData(file, mydata);
 
     }

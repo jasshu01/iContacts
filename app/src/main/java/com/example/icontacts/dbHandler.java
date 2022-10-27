@@ -12,12 +12,14 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -35,6 +37,7 @@ public class dbHandler extends SQLiteOpenHelper {
     boolean addinExisting = false;
     boolean sameName = false;
     Dialog dialog;
+
 
     public dbHandler(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
@@ -133,12 +136,91 @@ public class dbHandler extends SQLiteOpenHelper {
 
 
                         Log.d("updating", item.getPhone1() + " " + item.getPhone2());
-                        if (item.getPhone2().length() == 0) {
-                            item.setPhone2(contact_Phone1);
-                            updateContact(item);
+
+                      dialog.setContentView(R.layout.choose_replaceble_numbers);
+
+                        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+
+                        Button saveButton = dialog.findViewById(R.id.saveChanges);
+                        Button p1 = dialog.findViewById(R.id.replacablePhone);
+                        Button p2 = dialog.findViewById(R.id.replacablePhone1);
+                        Button p3 = dialog.findViewById(R.id.replacablePhone2);
+                        Button p4 = dialog.findViewById(R.id.replacablePhone3);
+
+                        TextView textview = dialog.findViewById(R.id.replacingPhone);
+                        TextView textview2 = dialog.findViewById(R.id.replacingPhone2);
+
+
+                        saveButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                dialog.dismiss();
+                                Toast.makeText(context, "Phone added in existing contact", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+                        if (contact_Phone1.length() != 0) {
+
+                            textview.setText("Replace Phone:" + contact_Phone1 + " with ");
+                            p1.setText(item.getPhone1());
+                            p2.setText(item.getPhone2());
+
+                            p1.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    item.setPhone1(contact_Phone1);
+                                    updateContact(item);
+
+                                    p1.setBackgroundColor(Color.argb(200,122,122,122));
+                                    p2.setBackgroundColor(Color.argb(255,0,0,125));
+                                }
+                            });
+
+                            p2.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    item.setPhone2(contact_Phone1);
+                                    updateContact(item);
+                                    p1.setBackgroundColor(Color.argb(255,0,0,125));
+                                    p2.setBackgroundColor(Color.argb(200,122,122,122));
+                                }
+                            });
                         }
-                        Toast.makeText(context, "Phone added in existing contact", Toast.LENGTH_SHORT).show();
-                        dialog.dismiss();
+
+
+
+                        if (contact_Phone2.length() != 0) {
+
+                            textview2.setText("Replace Phone:" + contact_Phone2 + " with ");
+                            p3.setText(item.getPhone1());
+                            p4.setText(item.getPhone2());
+
+                            p3.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    item.setPhone1(contact_Phone2);
+                                    updateContact(item);
+                                    p4.setBackgroundColor(Color.argb(255,0,0,125));
+                                    p3.setBackgroundColor(Color.argb(200,122,122,122));
+                                }
+                            });
+
+                            p4.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    item.setPhone2(contact_Phone2);
+                                    updateContact(item);
+                                    p3.setBackgroundColor(Color.argb(255,0,0,125));
+                                    p4.setBackgroundColor(Color.argb(200,122,122,122));
+                                }
+                            });
+                        }
+
+
+                        dialog.show();
+//                        Toast.makeText(context, "Phone added in existing contact", Toast.LENGTH_SHORT).show();
+//                        dialog.dismiss();
 
 
                     }

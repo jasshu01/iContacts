@@ -1,15 +1,23 @@
 package com.example.icontacts;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.util.Log;
+import android.view.MenuInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -23,10 +31,14 @@ public class dbHandler extends SQLiteOpenHelper {
 
     public long sNo = 1;
     Context mainActivityContext;
+    boolean cancelSaving = false;
+    boolean addinExisting = false;
+    boolean sameName = false;
+    Dialog dialog;
 
     public dbHandler(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
-        mainActivityContext=context;
+        mainActivityContext = context;
     }
 
 
@@ -57,8 +69,7 @@ public class dbHandler extends SQLiteOpenHelper {
         String contact_Email = contact.getEmail();
 
 
-
-        if (contact_Phone1.length() == 0 && contact_Phone2.length()==0) {
+        if (contact_Phone1.length() == 0 && contact_Phone2.length() == 0) {
             Toast.makeText(context, "Add valid Phone Number", Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -99,44 +110,81 @@ public class dbHandler extends SQLiteOpenHelper {
         }
 
 
-        ArrayList<Contact> allContact=allContacts();
+        ArrayList<Contact> allContact = allContacts();
 
         for (Contact item : allContact) {
 
-            if ((item.getFirstName().toLowerCase()+item.getLastName().toLowerCase()).equals(contact.getFirstName().toLowerCase()+contact.getLastName().toLowerCase()))
-            {
-                if(context!=mainActivityContext)
-                Toast.makeText(context, "Same Name already exists", Toast.LENGTH_SHORT).show();
+            if ((item.getFirstName().toLowerCase() + item.getLastName().toLowerCase()).equals(contact.getFirstName().toLowerCase() + contact.getLastName().toLowerCase())) {
+                sameName = true;
+
+                dialog = new Dialog(context);
+                dialog.setContentView(R.layout.add_in_existing_contact_dailog_box);
+
+
+                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+
+                Button addInExistingButton = dialog.findViewById(R.id.addInExistingButton);
+                Button cancelSavingButton = dialog.findViewById(R.id.cancelSavingButton);
+
+                addInExistingButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+
+                        Log.d("updating", item.getPhone1() + " " + item.getPhone2());
+                        if (item.getPhone2().length() == 0) {
+                            item.setPhone2(contact_Phone1);
+                            updateContact(item);
+                        }
+                        Toast.makeText(context, "Phone added in existing contact", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+
+
+                    }
+                });
+
+                cancelSavingButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+
+//                        Toast.makeText(context, "Cancel", Toast.LENGTH_SHORT).show();
+
+                    }
+
+                });
+
+
+                dialog.show();
                 return false;
+
+
             }
 
-            if(contact.getPhone1().length()!=0)
-            {
+
+            if (contact.getPhone1().length() != 0) {
                 if (item.getPhone1().equals(contact.getPhone1()) ||
-                        item.getPhone2().equals(contact.getPhone1()))
-                {
+                        item.getPhone2().equals(contact.getPhone1())) {
 
 //                    Log.d("importingContacts", "addContact: "+item.getPhone1()+","+item.getPhone2()+","+contact.getPhone1());
-                    if(context!=mainActivityContext)
-                    Toast.makeText(context, "Same Phone1 already exists", Toast.LENGTH_SHORT).show();
+                    if (context != mainActivityContext)
+                        Toast.makeText(context, "Same Phone1 already exists", Toast.LENGTH_SHORT).show();
                     return false;
                 }
 
             }
-            if(contact.getPhone2().length()!=0)
-            {
+            if (contact.getPhone2().length() != 0) {
                 if (item.getPhone2().equals(contact.getPhone2()) ||
-                        item.getPhone1().equals(contact.getPhone2()))
-                {
-                    if(context!=mainActivityContext)
-                    Toast.makeText(context, "Same Phone2 already exists", Toast.LENGTH_SHORT).show();
+                        item.getPhone1().equals(contact.getPhone2())) {
+                    if (context != mainActivityContext)
+                        Toast.makeText(context, "Same Phone2 already exists", Toast.LENGTH_SHORT).show();
                     return false;
                 }
 
             }
 
         }
-
 
 
         contentValues.put("firstName", contact.getFirstName());
@@ -149,9 +197,8 @@ public class dbHandler extends SQLiteOpenHelper {
         long k = db.insert("Contacts", null, contentValues);
 
 
-        if(photo!=null)
-        {
-            saveToInternalStorage(photo, String.valueOf(k),context);
+        if (photo != null) {
+            saveToInternalStorage(photo, String.valueOf(k), context);
         }
 
 
@@ -160,6 +207,48 @@ public class dbHandler extends SQLiteOpenHelper {
 
 
         return true;
+    }
+
+    private void createDailogBox(Context context) {
+
+        dialog = new Dialog(context);
+        dialog.setContentView(R.layout.add_in_existing_contact_dailog_box);
+
+
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+
+        Button addInExistingButton = dialog.findViewById(R.id.addInExistingButton);
+        Button cancelSavingButton = dialog.findViewById(R.id.cancelSavingButton);
+
+        addInExistingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                addinExisting = true;
+                Toast.makeText(context, "save", Toast.LENGTH_SHORT).show();
+                Log.d("checking", "existing : checking if saving " + addinExisting);
+                Log.d("checking", ": checking if cancel " + cancelSaving);
+
+            }
+        });
+
+        cancelSavingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                cancelSaving = true;
+                Toast.makeText(context, "CAncel", Toast.LENGTH_SHORT).show();
+                Log.d("checking", "cancel : checking if saving " + addinExisting);
+                Log.d("checking", ": checking if cancel " + cancelSaving);
+
+            }
+
+        });
+
+
+        dialog.show();
+
     }
 
     public ArrayList<Contact> allContacts() {
@@ -214,7 +303,7 @@ public class dbHandler extends SQLiteOpenHelper {
     }
 
 
-    private String saveToInternalStorage(Bitmap bitmapImage, String filename,Context context) {
+    private String saveToInternalStorage(Bitmap bitmapImage, String filename, Context context) {
         ContextWrapper cw = new ContextWrapper(context.getApplicationContext());
         // path to /data/data/yourapp/app_data/imageDir
         File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);

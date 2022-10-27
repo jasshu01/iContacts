@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             contactsArr.sort(Contact.contactsComparator);
         }
-
+//handler.addContact(new Contact("jasshu","234425"),this,null);
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -247,7 +247,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
-//            Log.d("importContacts", "importContacts: "+fname+lname+p1+p2+email);
+            Log.d("importContacts", "importContacts:"+fname+","+lname+","+p1+","+p2+","+email);
             if (handler.addContact(new Contact(fname, lname, p1, p2, email), this, null)) {
                 Log.d("importingContacts", "importContacts: " + 1);
             } else {
@@ -277,6 +277,7 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<Contact> mycontacts = handler.allContacts();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             mycontacts.sort(Contact.contactsComparator);
+
         }
 
         for (int i = 0; i < mycontacts.size(); i++) {

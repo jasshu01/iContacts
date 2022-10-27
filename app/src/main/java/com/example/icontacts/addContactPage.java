@@ -54,7 +54,9 @@ public class addContactPage extends AppCompatActivity {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+
+                Intent intent=new Intent(addContactPage.this,MainActivity.class);
+                startActivity(intent);
             }
         });
         saveButton.setOnClickListener(new View.OnClickListener() {
@@ -89,6 +91,7 @@ public class addContactPage extends AppCompatActivity {
                     startActivity(intent);
 
                 }
+
 
             }
         });

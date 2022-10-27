@@ -79,7 +79,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         @Override
         public void onClick(View view) {
 
-            Log.d("contactIndex", String.valueOf(getAdapterPosition()));
+
             int position = getAdapterPosition();
             Intent intent = new Intent(context, ContactInfo.class);
 
@@ -150,7 +150,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
             int color = Color.argb(randomBackgroundColor.nextInt(256), randomBackgroundColor.nextInt(256), randomBackgroundColor.nextInt(256), randomBackgroundColor.nextInt(256));
             displayText.setBackgroundColor(color);
 
-            Log.d("imagepick", "error");
+//            Log.d("imagepick", "error");
             e.printStackTrace();
         }
 

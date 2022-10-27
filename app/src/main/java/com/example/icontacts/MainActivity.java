@@ -195,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
     ActivityResultLauncher<Intent> activityResultLauncher_pickFile = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         if (result.getResultCode() == Activity.RESULT_OK) {
             Intent data = result.getData();
-            Log.d("checking", "i am here: ");
+
             if (data != null && data.getData() != null) {
 
                 try {
@@ -224,7 +224,7 @@ public class MainActivity extends AppCompatActivity {
             p2 = "";
             email = "";
 
-            Log.d("importingContacts", "importContacts: " + line);
+
 
             for (int i = 0; i < splitted.length; i++) {
 
@@ -246,17 +246,17 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
-            Log.d("importContacts", "importContacts: "+fname+lname+p1+p2+email);
-            if (handler.addContact(new Contact(fname, lname, p1, p2, email), this, null)) {
-                Log.d("importingContacts", "importContacts: " + 1);
-            } else {
-                Log.d("importingContacts", "importContacts: " + 0);
-            }
+//            Log.d("importContacts", "importContacts: "+fname+lname+p1+p2+email);
+//            if (handler.addContact(new Contact(fname, lname, p1, p2, email), this, null)) {
+//                Log.d("importingContacts", "importContacts: " + 1);
+//            } else {
+//                Log.d("importingContacts", "importContacts: " + 0);
+//            }
 
 
         }
 
-        Log.d("importingContacts", "new size: " + handler.allContacts().size());
+
         Intent intent=new Intent(MainActivity.this,MainActivity.class);
         startActivity(intent);
 

@@ -1,5 +1,6 @@
 package com.example.icontacts;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.ContextWrapper;
@@ -43,6 +44,7 @@ public class dbHandler extends SQLiteOpenHelper {
     }
 
 
+    @SuppressLint("SuspiciousIndentation")
     public boolean addContact(Contact contact, Context context, Bitmap photo) {
 
         SQLiteDatabase db = getWritableDatabase();

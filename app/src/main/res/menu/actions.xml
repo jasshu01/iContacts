@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
         android:id="@+id/importContacts"
@@ -7,4 +8,7 @@
     <item
         android:id="@+id/exportContacts"
         android:title="Export Contacts" />
+    <item
+        android:id="@+id/deleteMultiple"
+        android:title="Delete Selected Contacts" />
 </menu>

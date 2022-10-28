@@ -28,7 +28,25 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     private static ArrayList<Contact> localDataSet;
     private static Context context;
     private static CardView cardView;
+    public static Boolean isSelectMode=false;
+    public static ArrayList<Integer> selectedContacts=new ArrayList<>();
 
+
+    public static Boolean getIsSelectMode() {
+        return isSelectMode;
+    }
+
+    public static void setIsSelectMode(Boolean isSelectMode) {
+        CustomAdapter.isSelectMode = isSelectMode;
+    }
+
+    public static ArrayList<Integer> getSelectedContacts() {
+        return selectedContacts;
+    }
+
+    public static void setSelectedContacts(ArrayList<Integer> selectedContacts) {
+        CustomAdapter.selectedContacts = selectedContacts;
+    }
 
     /**
      * Provide a reference to the type of views that you are using
@@ -39,6 +57,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         private static TextView contactPhone;
         private static ImageView fav, displayPic;
         private static TextView displayText;
+
 
         public ViewHolder(View view) {
             super(view);
@@ -53,6 +72,29 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
             cardView = (CardView) view.findViewById(R.id.cardView);
 
 
+            view.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    isSelectMode=true;
+                    Log.d("selecting multiple", "onLongClick: "+getAdapterPosition());
+                    if(selectedContacts.contains(localDataSet.get(getAdapterPosition()).getSno()))
+                    {
+
+                        selectedContacts.remove(Integer.valueOf(localDataSet.get(getAdapterPosition()).getSno()));
+                        view.setBackgroundColor(Color.TRANSPARENT);
+                    }
+                    else{
+                        selectedContacts.add(getAdapterPosition());
+                        view.setBackgroundColor(Color.argb(122,122,122,122));
+                    }
+
+                    if(selectedContacts.size()==0)
+                        isSelectMode=false;
+
+                    return true;
+                }
+            });
+
         }
 
 
@@ -63,20 +105,15 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         public TextView getContactPhone() {
             return contactPhone;
         }
-
         public CardView getCardView() {
             return cardView;
         }
-
-
         public ImageView getFavImageView() {
             return fav;
         }
-
         public ImageView getDisplapPic() {
             return displayPic;
         }
-
         public TextView getDisplapText() {
             return displayText;
         }
@@ -84,6 +121,27 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
 
         @Override
         public void onClick(View view) {
+
+
+            if(isSelectMode)
+            {
+                if(selectedContacts.contains(getAdapterPosition()))
+                {
+                    selectedContacts.remove(Integer.valueOf(localDataSet.get(getAdapterPosition()).getSno()));
+                    view.setBackgroundColor(Color.TRANSPARENT);
+                }
+                else{
+
+                    selectedContacts.add(localDataSet.get(getAdapterPosition()).getSno());
+                    view.setBackgroundColor(Color.argb(122,122,122,122));
+                }
+
+                if(selectedContacts.size()==0)
+                    isSelectMode=false;
+                Log.d("selecting multiple", "onClick: "+selectedContacts.toString());
+                return;
+
+            }
 
 
             int position = getAdapterPosition();
@@ -103,18 +161,24 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
 
 
         }
+
+
+
     }
 
 
     /**
      * Initialize the dataset of the Adapter.
      *
-     * @param dataSet String[] containing the data to populate views to be used
-     *                by RecyclerView.
+     * @param dataSet            String[] containing the data to populate views to be used
+     *                           by RecyclerView.
+
      */
     public CustomAdapter(Context context, ArrayList<Contact> dataSet) {
         this.context = context;
         localDataSet = dataSet;
+        isSelectMode = false;
+        selectedContacts.clear();
     }
 
     // Create new views (invoked by the layout manager)

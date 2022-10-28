@@ -4,16 +4,12 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,9 +33,7 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -51,7 +45,8 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     SearchView searchView;
     ImageView addContact, showOptions;
-
+    Boolean isSelectMode = false;
+    ArrayList<Integer> selectedContactSno = null;
     ArrayList<Contact> contactsArr = new ArrayList<>();
     dbHandler handler;
 
@@ -92,7 +87,25 @@ public class MainActivity extends AppCompatActivity {
                 inflater.inflate(R.menu.actions, popup.getMenu());
                 popup.show();
 
+                Menu items = popup.getMenu();
+                if (CustomAdapter.isSelectMode) {
+
+                    MenuItem item = items.findItem(R.id.importContacts);
+                    item.setEnabled(false);
+                    item = items.findItem(R.id.exportContacts);
+                    item.setEnabled(false);
+                } else {
+
+                    MenuItem item = items.findItem(R.id.importContacts);
+                    item.setEnabled(true);
+                    item = items.findItem(R.id.exportContacts);
+                    item.setEnabled(true);
+                }
+
+
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+
+
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
 
@@ -125,6 +138,19 @@ public class MainActivity extends AppCompatActivity {
                                     Log.d("exportingContacts", "onMenuItemClick: " + e.toString());
                                 }
                                 return true;
+                            case R.id.deleteMultiple: {
+
+                                ArrayList<Integer> arr = CustomAdapter.selectedContacts;
+                                dbHandler handler = new dbHandler(MainActivity.this, "Contacts", null, 1);
+                                Log.d("delete", "onMenuItemClick: "+arr);
+                                for (int i = 0; i < arr.size(); i++) {
+                                    handler.deleteContact(arr.get(i));
+                                }
+                                Intent intent = new Intent(MainActivity.this, MainActivity.class);
+                                startActivity(intent);
+                                return true;
+                            }
+
                         }
 
 
@@ -177,7 +203,6 @@ public class MainActivity extends AppCompatActivity {
                 recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
                 recyclerView.setAdapter(ca);
                 if (filteredlist.isEmpty()) {
-
                     Toast.makeText(MainActivity.this, "No Data Found..", Toast.LENGTH_SHORT).show();
                 }
 
@@ -247,7 +272,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
-            Log.d("importContacts", "importContacts:"+fname+","+lname+","+p1+","+p2+","+email);
+            Log.d("importContacts", "importContacts:" + fname + "," + lname + "," + p1 + "," + p2 + "," + email);
             if (handler.addContact(new Contact(fname, lname, p1, p2, email), this, null)) {
                 Log.d("importingContacts", "importContacts: " + 1);
             } else {
@@ -274,8 +299,7 @@ public class MainActivity extends AppCompatActivity {
         File file = new File(folder, "ExportedContacts.txt");
         String mydata = "";
 
-        if(file.exists())
-        {
+        if (file.exists()) {
             file.delete();
         }
 

@@ -273,7 +273,12 @@ public class MainActivity extends AppCompatActivity {
 
         File file = new File(folder, "ExportedContacts.txt");
         String mydata = "";
-        writeTextData(file, "");
+
+        if(file.exists())
+        {
+            file.delete();
+        }
+
         ArrayList<Contact> mycontacts = handler.allContacts();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             mycontacts.sort(Contact.contactsComparator);

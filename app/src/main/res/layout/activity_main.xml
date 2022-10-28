@@ -8,48 +8,59 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="1dp"
+        android:layout_width="404dp"
+        android:layout_height="613dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addContact" />
+        app:layout_constraintTop_toBottomOf="@+id/GroupCount"
+        app:layout_constraintVertical_bias="0.5" />
 
-    <SearchView
-        android:id="@+id/searchView"
-        android:layout_width="246dp"
-        android:layout_height="58dp"
-        android:layout_marginTop="3dp"
-        android:scrollbarSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/recyclerView"
-        app:layout_constraintEnd_toStartOf="@+id/showOptions"
-        app:layout_constraintStart_toEndOf="@+id/addContact"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.2" />
-
-    <ImageView
-        android:id="@+id/addContact"
-        android:layout_width="73dp"
-        android:layout_height="62dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="4dp"
-        android:contentDescription="@string/todo"
-        app:layout_constraintBottom_toTopOf="@+id/recyclerView"
-        app:layout_constraintEnd_toStartOf="@+id/searchView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/add_icon" />
-
-    <ImageView
-        android:id="@+id/showOptions"
-        android:layout_width="61dp"
-        android:layout_height="54dp"
-        android:layout_marginEnd="4dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/recyclerView"
+    <LinearLayout
+        android:layout_width="408dp"
+        android:layout_height="68dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
-        app:srcCompat="@drawable/more_vertical" />
+        app:layout_constraintVertical_bias="0.009">
+
+        <ImageView
+            android:id="@+id/addContact"
+            android:layout_width="73dp"
+            android:layout_height="62dp"
+            android:contentDescription="@string/todo"
+            app:srcCompat="@drawable/add_icon" />
+
+        <SearchView
+            android:id="@+id/searchView"
+            android:layout_width="280dp"
+            android:layout_height="58dp"
+            android:scrollbarSize="24sp" />
+
+        <ImageView
+            android:id="@+id/showOptions"
+            android:layout_width="55dp"
+            android:layout_height="54dp"
+            app:srcCompat="@drawable/more_vertical" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/GroupCount"
+        android:layout_width="376dp"
+        android:layout_height="48dp"
+        android:clickable="true"
+        android:paddingLeft="12dp"
+        android:text="See Groups"
+        android:textColor="#2935E4"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.104" />
 </androidx.constraintlayout.widget.ConstraintLayout>

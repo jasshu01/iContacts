@@ -43,8 +43,10 @@ public class dbHandler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String create = "CREATE TABLE CONTACTS (sno INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,FIRSTNAME TEXT,LASTNAME TEXT,PHONE1 TEXT,PHONE2 TEXT , EMAIL TEXT,fav INTEGER)";
+        String create2 = "CREATE TABLE CONTACTS_GROUP (sno INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,GROUP_NAME TEXT,GROUP_MEMBERS TEXT)";
 
         db.execSQL(create);
+        db.execSQL(create2);
 
     }
 
@@ -382,16 +384,41 @@ public class dbHandler extends SQLiteOpenHelper {
                 contact.setEmail(cursor.getString(5));
                 contact.setFav(cursor.getInt(6));
                 contactsArr.add(contact);
+                Log.d("fetching", "allContacts: " + cursor.getString(0));
             } while (cursor.moveToNext());
         }
 
         return contactsArr;
     }
 
+    public Contact fetchContact(int Sno) {
+        Contact contact = new Contact();
+        SQLiteDatabase db = getReadableDatabase();
+        String query = "Select * from Contacts where sno=" + Sno + ";";
+        Cursor cursor = db.rawQuery(query, null);
+
+        Log.d("fetchingContact", "fetchContact: " + query);
+
+        if (cursor != null) {
+            cursor.moveToFirst();
+
+
+            contact.setSno(Integer.parseInt(cursor.getString(0)));
+            contact.setFirstName(cursor.getString(1));
+            contact.setLastName(cursor.getString(2));
+            contact.setPhone1(cursor.getString(3));
+            contact.setPhone2(cursor.getString(4));
+            contact.setEmail(cursor.getString(5));
+            contact.setFav(cursor.getInt(6));
+        }
+
+
+
+        return contact;
+    }
+
     public void deleteContact(int sno) {
         SQLiteDatabase db = getWritableDatabase();
-//        Contact c = accessContacts(sno +1);
-//        Log.d("Delete", "deleteContact: " + c.getFirstName());
         Log.d("Delete", "deleteContact: " + String.valueOf(sno));
         db.delete("Contacts", "sno=?", new String[]{String.valueOf(sno)});
 
@@ -440,6 +467,67 @@ public class dbHandler extends SQLiteOpenHelper {
 
         Log.d("address", directory.getAbsolutePath());
         return directory.getAbsolutePath();
+    }
+
+
+    public Boolean addGroup(ContactGroup contactGroup, Context context) {
+
+
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+
+        contentValues.put("Group_Name", contactGroup.getGroupName());
+        contentValues.put("Group_Members", contactGroup.getGroupMembers());
+
+
+        long k = db.insert("CONTACTS_GROUP", null, contentValues);
+        db.close();
+        Log.d("adding", "addContact: " + k);
+
+        return true;
+    }
+
+    public void updateGroup(ContactGroup contactGroup) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put("Group_Name", contactGroup.getGroupName());
+        contentValues.put("Group_Members", contactGroup.getGroupMembers());
+
+
+        db.update("CONTACTS_GROUP", contentValues, "sno=?", new String[]{String.valueOf(contactGroup.getSno())});
+
+
+    }
+
+    public void deleteGroup(int sno) {
+        SQLiteDatabase db = getWritableDatabase();
+
+        Log.d("Delete", "deleteContact: " + String.valueOf(sno));
+        db.delete("CONTACTS_GROUP", "sno=?", new String[]{String.valueOf(sno)});
+    }
+
+    public ArrayList<ContactGroup> fetchGroups() {
+        ArrayList<ContactGroup> groupsArr = new ArrayList<>();
+        SQLiteDatabase db = getReadableDatabase();
+        String query = "Select *  from CONTACTS_GROUP";
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor!=null && cursor.moveToFirst()) {
+            do {
+                ContactGroup contactGroup = new ContactGroup();
+                Log.d("allContacts", "groupname: " + cursor.getString(1));
+                contactGroup.setSno(Integer.parseInt(cursor.getString(0)));
+                contactGroup.setGroupName(cursor.getString(1));
+                contactGroup.setGroupMembers(cursor.getString(2));
+
+                groupsArr.add(contactGroup);
+                Log.d("fetching", "groups: " + cursor.getString(0));
+            } while (cursor.moveToNext());
+        }
+
+        return groupsArr;
     }
 
 

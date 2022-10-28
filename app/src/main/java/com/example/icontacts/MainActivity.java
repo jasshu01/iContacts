@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
     SearchView searchView;
     ImageView addContact, showOptions;
     Boolean isSelectMode = false;
+    TextView viewGroups;
     ArrayList<Integer> selectedContactSno = null;
     ArrayList<Contact> contactsArr = new ArrayList<>();
     dbHandler handler;
@@ -60,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
         searchView = findViewById(R.id.searchView);
         addContact = findViewById(R.id.addContact);
         showOptions = findViewById(R.id.showOptions);
+        viewGroups = findViewById(R.id.GroupCount);
 
 
         Dexter.withContext(this)
@@ -142,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
 
                                 ArrayList<Integer> arr = CustomAdapter.selectedContacts;
                                 dbHandler handler = new dbHandler(MainActivity.this, "Contacts", null, 1);
-                                Log.d("delete", "onMenuItemClick: "+arr);
+                                Log.d("delete", "onMenuItemClick: " + arr);
                                 for (int i = 0; i < arr.size(); i++) {
                                     handler.deleteContact(arr.get(i));
                                 }
@@ -161,7 +164,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         addContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -173,7 +175,23 @@ public class MainActivity extends AppCompatActivity {
         handler = new dbHandler(MainActivity.this, "Contacts", null, 1);
 
 
+
+        viewGroups.setText("See Groups(" + handler.fetchGroups().size() + ")");
+
+
+        viewGroups.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                Toast.makeText(MainActivity.this, "opening Groups", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MainActivity.this, ViewGroups.class);
+                startActivity(intent);
+            }
+
+        });
+
         contactsArr = handler.allContacts();
+
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             contactsArr.sort(Contact.contactsComparator);
         }

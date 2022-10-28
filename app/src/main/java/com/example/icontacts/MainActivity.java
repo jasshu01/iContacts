@@ -3,16 +3,23 @@ package com.example.icontacts;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.SearchView;
@@ -51,7 +58,8 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Integer> selectedContactSno = null;
     ArrayList<Contact> contactsArr = new ArrayList<>();
     dbHandler handler;
-
+    String members = "";
+    String groupName = "";
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,12 +105,27 @@ public class MainActivity extends AppCompatActivity {
                     item.setEnabled(false);
                     item = items.findItem(R.id.exportContacts);
                     item.setEnabled(false);
+
+                    item = items.findItem(R.id.deleteMultiple);
+                    item.setEnabled(true);
+
+                    item = items.findItem(R.id.createGroup);
+                    if (CustomAdapter.selectedContacts.size() > 1) {
+                        item.setEnabled(true);
+                    } else {
+                        item.setEnabled(false);
+                    }
                 } else {
 
                     MenuItem item = items.findItem(R.id.importContacts);
                     item.setEnabled(true);
                     item = items.findItem(R.id.exportContacts);
                     item.setEnabled(true);
+                    item = items.findItem(R.id.deleteMultiple);
+                    item.setEnabled(false);
+
+                    item = items.findItem(R.id.createGroup);
+                    item.setEnabled(false);
                 }
 
 
@@ -153,6 +176,63 @@ public class MainActivity extends AppCompatActivity {
                                 startActivity(intent);
                                 return true;
                             }
+                            case R.id.createGroup: {
+
+                                ArrayList<Integer> arr = CustomAdapter.selectedContacts;
+                                dbHandler handler = new dbHandler(MainActivity.this, "Contacts", null, 1);
+                                Log.d("delete", "onMenuItemClick: " + arr);
+
+                                for (int i = 0; i < arr.size(); i++) {
+                                    members += arr.get(i) + ",";
+                                }
+
+                                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                                builder.setTitle("Set Group Name");
+
+                                final EditText input = new EditText(MainActivity.this);
+
+                                input.setInputType(InputType.TYPE_CLASS_TEXT);
+                                builder.setView(input);
+
+                                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        groupName = input.getText().toString();
+                                        handler.addGroup(new ContactGroup(groupName,members),MainActivity.this);
+                                        Intent intent = new Intent(MainActivity.this, MainActivity.class);
+                                startActivity(intent);
+                                    }
+                                });
+                                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.cancel();
+
+                                    }
+                                });
+
+                                builder.show();
+
+//                                Dialog dialog = new Dialog(MainActivity.this);
+//                                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//                                dialog.setContentView(R.layout.ask_group_name);
+//
+//                                Button saveGroupName=dialog.findViewById(R.id.saveGroupName);
+//
+//                                saveGroupName.setOnClickListener(new View.OnClickListener() {
+//                                    @Override
+//                                    public void onClick(View view) {
+//
+//                                        EditText askingGroupName=dialog.findViewById(R.id.askingGroupName);
+//
+//                                        handler.addGroup(new ContactGroup(askingGroupName.getText(),members),MainActivity.this);
+//                                    }
+//                                });
+
+//                                Intent intent = new Intent(MainActivity.this, MainActivity.class);
+//                                startActivity(intent);
+//                                return true;
+                            }
 
                         }
 
@@ -173,7 +253,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         handler = new dbHandler(MainActivity.this, "Contacts", null, 1);
-
 
 
         viewGroups.setText("See Groups(" + handler.fetchGroups().size() + ")");

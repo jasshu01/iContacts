@@ -77,14 +77,13 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
                 public boolean onLongClick(View view) {
                     isSelectMode=true;
                     Log.d("selecting multiple", "onLongClick: "+getAdapterPosition());
-                    if(selectedContacts.contains(localDataSet.get(getAdapterPosition()).getSno()))
+                    if(selectedContacts.contains(Integer.valueOf(localDataSet.get(getAdapterPosition()).getSno())))
                     {
-
                         selectedContacts.remove(Integer.valueOf(localDataSet.get(getAdapterPosition()).getSno()));
                         view.setBackgroundColor(Color.TRANSPARENT);
                     }
                     else{
-                        selectedContacts.add(getAdapterPosition());
+                        selectedContacts.add(Integer.valueOf(localDataSet.get(getAdapterPosition()).getSno()));
                         view.setBackgroundColor(Color.argb(122,122,122,122));
                     }
 
@@ -125,14 +124,14 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
 
             if(isSelectMode)
             {
-                if(selectedContacts.contains(getAdapterPosition()))
+                if(selectedContacts.contains(Integer.valueOf(localDataSet.get(getAdapterPosition()).getSno())))
                 {
                     selectedContacts.remove(Integer.valueOf(localDataSet.get(getAdapterPosition()).getSno()));
                     view.setBackgroundColor(Color.TRANSPARENT);
                 }
                 else{
 
-                    selectedContacts.add(localDataSet.get(getAdapterPosition()).getSno());
+                    selectedContacts.add(Integer.valueOf(localDataSet.get(getAdapterPosition()).getSno()));
                     view.setBackgroundColor(Color.argb(122,122,122,122));
                 }
 

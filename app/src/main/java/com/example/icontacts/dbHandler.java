@@ -117,6 +117,28 @@ public class dbHandler extends SQLiteOpenHelper {
 
         for (Contact item : allContact) {
 
+
+            if (contact.getPhone1().length() != 0) {
+                if (item.getPhone1().equals(contact.getPhone1()) ||
+                        item.getPhone2().equals(contact.getPhone1())) {
+
+//                    Log.d("importingContacts", "addContact: "+item.getPhone1()+","+item.getPhone2()+","+contact.getPhone1());
+                    if (context != mainActivityContext)
+                        Toast.makeText(context, "Same Phone1 already exists", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+
+            }
+            if (contact.getPhone2().length() != 0) {
+                if (item.getPhone2().equals(contact.getPhone2()) ||
+                        item.getPhone1().equals(contact.getPhone2())) {
+                    if (context != mainActivityContext)
+                        Toast.makeText(context, "Same Phone2 already exists", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+
+            }
+
             if ((item.getFirstName().toLowerCase() + item.getLastName().toLowerCase()).equals(contact.getFirstName().toLowerCase() + contact.getLastName().toLowerCase())) {
                 sameName = true;
 
@@ -137,7 +159,7 @@ public class dbHandler extends SQLiteOpenHelper {
 
                         Log.d("updating", item.getPhone1() + " " + item.getPhone2());
 
-                      dialog.setContentView(R.layout.choose_replaceble_numbers);
+                        dialog.setContentView(R.layout.choose_replaceble_numbers);
 
                         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
@@ -172,8 +194,8 @@ public class dbHandler extends SQLiteOpenHelper {
                                     item.setPhone1(contact_Phone1);
                                     updateContact(item);
 
-                                    p1.setBackgroundColor(Color.argb(200,122,122,122));
-                                    p2.setBackgroundColor(Color.argb(255,0,0,125));
+                                    p1.setBackgroundColor(Color.argb(200, 122, 122, 122));
+                                    p2.setBackgroundColor(Color.argb(255, 0, 0, 125));
                                 }
                             });
 
@@ -182,12 +204,16 @@ public class dbHandler extends SQLiteOpenHelper {
                                 public void onClick(View view) {
                                     item.setPhone2(contact_Phone1);
                                     updateContact(item);
-                                    p1.setBackgroundColor(Color.argb(255,0,0,125));
-                                    p2.setBackgroundColor(Color.argb(200,122,122,122));
+                                    p1.setBackgroundColor(Color.argb(255, 0, 0, 125));
+                                    p2.setBackgroundColor(Color.argb(200, 122, 122, 122));
                                 }
                             });
                         }
-
+                        else{
+                            textview.setVisibility(View.GONE);
+                            p1.setVisibility(View.GONE);
+                            p2.setVisibility(View.GONE);
+                        }
 
 
                         if (contact_Phone2.length() != 0) {
@@ -201,8 +227,8 @@ public class dbHandler extends SQLiteOpenHelper {
                                 public void onClick(View view) {
                                     item.setPhone1(contact_Phone2);
                                     updateContact(item);
-                                    p4.setBackgroundColor(Color.argb(255,0,0,125));
-                                    p3.setBackgroundColor(Color.argb(200,122,122,122));
+                                    p4.setBackgroundColor(Color.argb(255, 0, 0, 125));
+                                    p3.setBackgroundColor(Color.argb(200, 122, 122, 122));
                                 }
                             });
 
@@ -211,16 +237,18 @@ public class dbHandler extends SQLiteOpenHelper {
                                 public void onClick(View view) {
                                     item.setPhone2(contact_Phone2);
                                     updateContact(item);
-                                    p3.setBackgroundColor(Color.argb(255,0,0,125));
-                                    p4.setBackgroundColor(Color.argb(200,122,122,122));
+                                    p3.setBackgroundColor(Color.argb(255, 0, 0, 125));
+                                    p4.setBackgroundColor(Color.argb(200, 122, 122, 122));
                                 }
                             });
                         }
-
+                        else{
+                            textview2.setVisibility(View.GONE);
+                            p3.setVisibility(View.GONE);
+                            p4.setVisibility(View.GONE);
+                        }
 
                         dialog.show();
-//                        Toast.makeText(context, "Phone added in existing contact", Toast.LENGTH_SHORT).show();
-//                        dialog.dismiss();
 
 
                     }
@@ -231,7 +259,6 @@ public class dbHandler extends SQLiteOpenHelper {
                     public void onClick(View v) {
                         dialog.dismiss();
 
-//                        Toast.makeText(context, "Cancel", Toast.LENGTH_SHORT).show();
 
                     }
 
@@ -245,26 +272,7 @@ public class dbHandler extends SQLiteOpenHelper {
             }
 
 
-            if (contact.getPhone1().length() != 0) {
-                if (item.getPhone1().equals(contact.getPhone1()) ||
-                        item.getPhone2().equals(contact.getPhone1())) {
 
-//                    Log.d("importingContacts", "addContact: "+item.getPhone1()+","+item.getPhone2()+","+contact.getPhone1());
-                    if (context != mainActivityContext)
-                        Toast.makeText(context, "Same Phone1 already exists", Toast.LENGTH_SHORT).show();
-                    return false;
-                }
-
-            }
-            if (contact.getPhone2().length() != 0) {
-                if (item.getPhone2().equals(contact.getPhone2()) ||
-                        item.getPhone1().equals(contact.getPhone2())) {
-                    if (context != mainActivityContext)
-                        Toast.makeText(context, "Same Phone2 already exists", Toast.LENGTH_SHORT).show();
-                    return false;
-                }
-
-            }
 
         }
 

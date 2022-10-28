@@ -35,7 +35,8 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
      * (custom ViewHolder).
      */
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private final TextView textView;
+        private static TextView contactName;
+        private static TextView contactPhone;
         private static ImageView fav, displayPic;
         private static TextView displayText;
 
@@ -43,7 +44,8 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
             super(view);
             // Define click listener for the ViewHolder's View
             view.setOnClickListener(this);
-            textView = (TextView) view.findViewById(R.id.contactName);
+            contactName = (TextView) view.findViewById(R.id.contactName);
+            contactPhone = (TextView) view.findViewById(R.id.contactPhone);
 
             fav = (ImageView) view.findViewById(R.id.fav);
             displayPic = (ImageView) view.findViewById(R.id.displayPic);
@@ -54,8 +56,12 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         }
 
 
-        public TextView getTextView() {
-            return textView;
+        public TextView getContactName() {
+            return contactName;
+        }
+
+        public TextView getContactPhone() {
+            return contactPhone;
         }
 
         public CardView getCardView() {
@@ -127,7 +133,12 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     public void onBindViewHolder(ViewHolder viewHolder, @SuppressLint("RecyclerView") final int position) {
 
 
-        viewHolder.getTextView().setText(localDataSet.get(position).getFirstName()+" "+localDataSet.get(position).getLastName());
+        viewHolder.getContactName().setText(localDataSet.get(position).getFirstName() + " " + localDataSet.get(position).getLastName());
+        if (localDataSet.get(position).getPhone1().length() != 0)
+            viewHolder.getContactPhone().setText(localDataSet.get(position).getPhone1());
+        else
+            viewHolder.getContactPhone().setText(localDataSet.get(position).getPhone2());
+
         ImageView img = viewHolder.getFavImageView();
 
         ImageView displayPic = viewHolder.getDisplapPic();

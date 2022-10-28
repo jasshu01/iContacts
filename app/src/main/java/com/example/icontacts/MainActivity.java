@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             contactsArr.sort(Contact.contactsComparator);
         }
-//handler.addContact(new Contact("jasshu","234425"),this,null);
+
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override

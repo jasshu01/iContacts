@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -64,6 +65,13 @@ public class GroupInfo extends AppCompatActivity {
                 handler.deleteGroup(sno);
                 Intent intent1=new Intent(GroupInfo.this,MainActivity2.class);
                 startActivity(intent1);
+            }
+        });
+        
+        sendMessage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(GroupInfo.this, "TODO", Toast.LENGTH_SHORT).show();
             }
         });
 

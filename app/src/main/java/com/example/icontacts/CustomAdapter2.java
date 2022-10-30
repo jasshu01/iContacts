@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.media.Image;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,7 +37,7 @@ public class CustomAdapter2 extends RecyclerView.Adapter<CustomAdapter2.ViewHold
      */
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private static TextView groupName;
-
+        private static ImageView deleteGroup;
 
 
         public ViewHolder(View view) {
@@ -44,6 +45,7 @@ public class CustomAdapter2 extends RecyclerView.Adapter<CustomAdapter2.ViewHold
             // Define click listener for the ViewHolder's View
             view.setOnClickListener(this);
             groupName = (TextView) view.findViewById(R.id.groupName);
+            deleteGroup = (ImageView) view.findViewById(R.id.deleteGroup);
 
 
         }
@@ -53,25 +55,27 @@ public class CustomAdapter2 extends RecyclerView.Adapter<CustomAdapter2.ViewHold
             return groupName;
         }
 
+        public ImageView getDeleteGroup() {
+            return deleteGroup;
+        }
 
 
         @Override
         public void onClick(View view) {
 
             int position = getAdapterPosition();
-            Toast.makeText(context,localDataSet.get(position).getGroupName() , Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, localDataSet.get(position).getGroupName(), Toast.LENGTH_SHORT).show();
 //
             Intent intent = new Intent(context, GroupInfo.class);
 //
             intent.putExtra("Sno", localDataSet.get(position).getSno());
             intent.putExtra("GroupName", localDataSet.get(position).getGroupName());
             intent.putExtra("GroupMembers", localDataSet.get(position).getGroupMembers());
-            Log.d("groupmembers", "onClick: "+localDataSet.get(position).getGroupMembers());
+            Log.d("groupmembers", "onClick: " + localDataSet.get(position).getGroupMembers());
             context.startActivity(intent);
 
 
         }
-
 
 
     }
@@ -80,9 +84,8 @@ public class CustomAdapter2 extends RecyclerView.Adapter<CustomAdapter2.ViewHold
     /**
      * Initialize the dataset of the Adapter.
      *
-     * @param dataSet            String[] containing the data to populate views to be used
-     *                           by RecyclerView.
-
+     * @param dataSet String[] containing the data to populate views to be used
+     *                by RecyclerView.
      */
     public CustomAdapter2(Context context, ArrayList<ContactGroup> dataSet) {
         this.context = context;
@@ -107,7 +110,15 @@ public class CustomAdapter2 extends RecyclerView.Adapter<CustomAdapter2.ViewHold
 
 
         viewHolder.getGroupName().setText(localDataSet.get(position).getGroupName());
-
+        viewHolder.getDeleteGroup().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dbHandler handler = new dbHandler(context, "Contacts", null, 1);
+                handler.deleteGroup(localDataSet.get(position).getSno());
+                Intent intent = new Intent(context, MainActivity2.class);
+                context.startActivity(intent);
+            }
+        });
 
     }
 

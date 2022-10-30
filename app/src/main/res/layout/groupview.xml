@@ -35,5 +35,13 @@
             android:paddingLeft="20dp"
             android:text="Group Name"
             android:textSize="24sp" />
+
+        <ImageView
+            android:id="@+id/deleteGroup"
+            android:layout_width="35dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/deletegroup" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

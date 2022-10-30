@@ -66,7 +66,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
             contactName = (TextView) view.findViewById(R.id.contactName);
             contactPhone = (TextView) view.findViewById(R.id.contactPhone);
 
-            fav = (ImageView) view.findViewById(R.id.fav);
+            fav = (ImageView) view.findViewById(R.id.deleteFromGroup);
             displayPic = (ImageView) view.findViewById(R.id.displayPic);
             displayText = (TextView) view.findViewById(R.id.displayText);
             cardView = (CardView) view.findViewById(R.id.cardView);

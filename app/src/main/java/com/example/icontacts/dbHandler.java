@@ -402,7 +402,6 @@ public class dbHandler extends SQLiteOpenHelper {
         if (cursor != null) {
             cursor.moveToFirst();
 
-
             contact.setSno(Integer.parseInt(cursor.getString(0)));
             contact.setFirstName(cursor.getString(1));
             contact.setLastName(cursor.getString(2));
@@ -411,10 +410,36 @@ public class dbHandler extends SQLiteOpenHelper {
             contact.setEmail(cursor.getString(5));
             contact.setFav(cursor.getInt(6));
         }
+        else{
+            return null;
+        }
 
 
 
         return contact;
+    }
+
+    public ContactGroup fetchGroup(int Sno) {
+        ContactGroup contactGroup = new ContactGroup();
+        SQLiteDatabase db = getReadableDatabase();
+        String query = "Select * from CONTACTS_GROUP where sno=" + Sno + ";";
+        Cursor cursor = db.rawQuery(query, null);
+
+        Log.d("ContactGroup", "ContactGroup: " + query);
+
+        if (cursor != null) {
+            cursor.moveToFirst();
+
+            contactGroup.setSno(Integer.parseInt(cursor.getString(0)));
+            contactGroup.setGroupName(cursor.getString(1));
+            contactGroup.setGroupMembers(cursor.getString(2));
+        }
+        else{
+            return null;
+        }
+
+        Log.d("fetchinggroup", "fetchGroup: "+contactGroup);
+        return contactGroup;
     }
 
     public void deleteContact(int sno) {
@@ -530,5 +555,17 @@ public class dbHandler extends SQLiteOpenHelper {
         return groupsArr;
     }
 
+    public void deleteFromGroup(int groupSno,int contactSno)
+    {
+        ContactGroup contactGroup=fetchGroup(groupSno);
+
+
+        String newMembers=contactGroup.getGroupMembers().replace(String.valueOf(contactSno),"");
+        contactGroup.setGroupMembers(newMembers);
+
+        Log.d("fetchinggroup", "fetchGroup: "+contactGroup);
+        updateGroup(contactGroup);
+
+    }
 
 }

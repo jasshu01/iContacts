@@ -2,6 +2,7 @@ package com.example.icontacts;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -71,8 +72,26 @@ public class GroupInfo extends AppCompatActivity {
         sendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(GroupInfo.this, "TODO", Toast.LENGTH_SHORT).show();
+
+
+
+                String numbers="";
+                for(int i=0;i<list.size();i++)
+                {
+                    if(list.get(i).getPhone1().length()!=0)
+                    {
+                        numbers+=(list.get(i).getPhone1())+",";
+                    }
+                    else{
+                        numbers+=(list.get(i).getPhone2())+",";
+                    }
+                }
+                Log.d("list of numbers", "onClick: "+numbers);
+                Uri uri = Uri.parse("smsto:" + numbers);
+                Intent messageIntent = new Intent(Intent.ACTION_SENDTO, uri);
+                startActivity(messageIntent);
             }
+
         });
 
 

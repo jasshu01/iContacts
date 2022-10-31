@@ -7,6 +7,9 @@ import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -26,9 +29,16 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -36,12 +46,19 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
     dbHandler handler;
     String members = "";
     String groupName = "";
+    Bitmap bitmap;
+
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +87,9 @@ public class MainActivity extends AppCompatActivity {
         addContact = findViewById(R.id.addContact);
         showOptions = findViewById(R.id.showOptions);
         viewGroups = findViewById(R.id.GroupCount);
+
+
+        handler = new dbHandler(MainActivity.this, "Contacts", null, 1);
 
 
         Dexter.withContext(this)
@@ -195,9 +217,9 @@ public class MainActivity extends AppCompatActivity {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         groupName = input.getText().toString();
-                                        handler.addGroup(new ContactGroup(groupName,members),MainActivity.this);
+                                        handler.addGroup(new ContactGroup(groupName, members), MainActivity.this);
                                         Intent intent = new Intent(MainActivity.this, MainActivity.class);
-                                startActivity(intent);
+                                        startActivity(intent);
                                     }
                                 });
                                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -249,8 +271,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        handler = new dbHandler(MainActivity.this, "Contacts", null, 1);
-
 
         viewGroups.setText("See Groups(" + handler.fetchGroups().size() + ")");
 
@@ -268,12 +288,9 @@ public class MainActivity extends AppCompatActivity {
         contactsArr = handler.allContacts();
 
 
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             contactsArr.sort(Contact.contactsComparator);
         }
-
-
 
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -313,8 +330,99 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(ca);
 
 
+        //        API Testing
+
+//        [{"fname":"test6","lname":"","p1":"6","p2":"66","email":"test6@gmail.com"},{"fname":"test7","lname":"","p1":"7","p2":"77","email":"test7@gmail.com"}]
+
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        String apiURL = "https://mocki.io/v1/3534e930-8cce-4949-b269-a461c4e6b617";
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, apiURL, null, new Response.Listener<JSONArray>() {
+
+
+            public void onResponse(JSONArray response) {
+                try {
+
+
+                    for (int i = 0; i < response.length(); i++) {
+                        Contact contact = new Contact();
+
+                        JSONObject obj = response.getJSONObject(i);
+                        contact.setFirstName(obj.getString("fname"));
+                        contact.setLastName(obj.getString("lname"));
+                        contact.setPhone1(obj.getString("p1"));
+                        contact.setPhone2(obj.getString("p2"));
+                        contact.setEmail(obj.getString("email"));
+//                        Log.d("fetching API", obj.getString("fname"));
+//                        Log.d("fetching API", obj.getString("lname"));
+//                        Log.d("fetching API", obj.getString("p1"));
+//                        Log.d("fetching API", obj.getString("p2"));
+//                        Log.d("fetching API", obj.getString("email"));
+
+
+                        String src = obj.getString("imgSource");
+                        Log.d("fetching", "before: " + bitmap);
+                        new GetImageFromUrl(contact).execute(src);
+                        Log.d("fetching", "after: " + bitmap);
+//                        handler.addContact(contact, MainActivity.this, bitmap);
+                    }
+
+
+//                    Log.d("fetching API", response.get(0).toString());
+//                    Log.d("fetching API", response.get(1).toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("fetching API", String.valueOf(error));
+                    }
+                });
+
+        requestQueue.add(jsonArrayRequest);
+
+
+//        ----------------------------
+
+
     }
 
+
+    public class GetImageFromUrl extends AsyncTask<String, Void, Bitmap> {
+
+        Contact contact = new Contact();
+
+        public GetImageFromUrl(Contact contact) {
+            this.contact = contact;
+        }
+
+        protected Bitmap doInBackground(String... url) {
+            String stringUrl = url[0];
+            Bitmap bitmap = null;
+            InputStream inputStream;
+            try {
+                inputStream = new java.net.URL(stringUrl).openStream();
+                bitmap = BitmapFactory.decodeStream(inputStream);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Log.d("fetching", "doInBackground: " + bitmap);
+            return bitmap;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmapPhoto) {
+            super.onPostExecute(bitmapPhoto);
+            bitmap = bitmapPhoto;
+
+            handler.addContact(contact, MainActivity.this, bitmap);
+            Log.d("fetchBitmap", "onPostExecute: " + bitmap);
+        }
+    }
 
     ActivityResultLauncher<Intent> activityResultLauncher_pickFile = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         if (result.getResultCode() == Activity.RESULT_OK) {

@@ -36,8 +36,8 @@ public class CustomAdapter2 extends RecyclerView.Adapter<CustomAdapter2.ViewHold
      * (custom ViewHolder).
      */
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private static TextView groupName;
-        private static ImageView deleteGroup;
+        private static TextView groupName;   private static ImageView deleteGroup;
+
 
 
         public ViewHolder(View view) {
@@ -54,6 +54,7 @@ public class CustomAdapter2 extends RecyclerView.Adapter<CustomAdapter2.ViewHold
         public TextView getGroupName() {
             return groupName;
         }
+
 
         public ImageView getDeleteGroup() {
             return deleteGroup;
@@ -76,6 +77,9 @@ public class CustomAdapter2 extends RecyclerView.Adapter<CustomAdapter2.ViewHold
 
 
         }
+
+
+
 
 
     }
@@ -119,6 +123,11 @@ public class CustomAdapter2 extends RecyclerView.Adapter<CustomAdapter2.ViewHold
                 context.startActivity(intent);
             }
         });
+
+
+
+
+
 
     }
 

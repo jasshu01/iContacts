@@ -4,6 +4,9 @@ package com.example.icontacts;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +16,11 @@ import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class CustomAdapter2_groupInfo extends RecyclerView.Adapter<CustomAdapter2_groupInfo.ViewHolder> {
 
@@ -31,7 +38,8 @@ public class CustomAdapter2_groupInfo extends RecyclerView.Adapter<CustomAdapter
         private static TextView contactName;
         private static TextView contactPhone;
         private static ImageView deleteFromGroup;
-
+        private static TextView displayText;
+        private static ImageView displayPic;
 
         public ViewHolder(View view) {
             super(view);
@@ -40,10 +48,18 @@ public class CustomAdapter2_groupInfo extends RecyclerView.Adapter<CustomAdapter
             contactName = (TextView) view.findViewById(R.id.contactName);
             contactPhone = (TextView) view.findViewById(R.id.contactPhone);
             deleteFromGroup = (ImageView) view.findViewById(R.id.deleteFromGroup);
-
+displayPic=(ImageView) view.findViewById(R.id.displayPic);
+            displayText=(TextView) view.findViewById(R.id.displayText);
 
         }
 
+        public TextView getDisplayText() {
+            return displayText;
+        }
+
+        public ImageView getDisplayPic() {
+            return displayPic;
+        }
 
         public TextView getContactName() {
             return contactName;
@@ -116,11 +132,37 @@ public class CustomAdapter2_groupInfo extends RecyclerView.Adapter<CustomAdapter
                 Toast.makeText(context, "deleting", Toast.LENGTH_SHORT).show();
                 dbHandler handler = new dbHandler(context, "Contacts", null, 1);
                 handler.deleteFromGroup(groupSno, localDataSet.get(position).getSno());
-                Intent intent=new Intent(context,GroupInfo.class);
+                Intent intent = new Intent(context, GroupInfo.class);
                 context.startActivity(intent);
 
             }
         });
+
+
+        ImageView displayPic = viewHolder.getDisplayPic();
+        TextView displayText = viewHolder.getDisplayText();
+
+        displayPic.setImageResource(R.drawable.person);
+        String filename = String.valueOf(localDataSet.get(position).getSno());
+        try {
+            File f = new File("/data/user/0/com.example.icontacts/app_imageDir", filename + ".jpg");
+            Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
+            displayPic.setImageBitmap(b);
+            displayText.setVisibility(View.GONE);
+        } catch (FileNotFoundException e)
+        {
+
+            displayPic.setVisibility(View.GONE);
+            String firstLetter = (String) localDataSet.get(position).getFirstName().subSequence(0, 1);
+            firstLetter = firstLetter.toUpperCase();
+            displayText.setText(firstLetter);
+            Random randomBackgroundColor = new Random();
+            int color = Color.argb(randomBackgroundColor.nextInt(256), randomBackgroundColor.nextInt(256), randomBackgroundColor.nextInt(256), randomBackgroundColor.nextInt(256));
+            displayText.setBackgroundColor(color);
+
+
+            e.printStackTrace();
+        }
 
     }
 

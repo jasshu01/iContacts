@@ -560,7 +560,18 @@ public class dbHandler extends SQLiteOpenHelper {
         ContactGroup contactGroup=fetchGroup(groupSno);
 
 
-        String newMembers=contactGroup.getGroupMembers().replace(String.valueOf(contactSno),"");
+//        String newMembers=contactGroup.getGroupMembers().replace(String.valueOf(contactSno),"");
+        String[] members=contactGroup.getGroupMembers().split(",");
+
+        String newMembers="";
+        for(int i=0;i<members.length;i++)
+        {
+            if(members[i].equals(String.valueOf(contactSno)))
+                continue;
+            else
+                newMembers+=members[i]+",";
+        }
+
         contactGroup.setGroupMembers(newMembers);
 
         Log.d("fetchinggroup", "fetchGroup: "+contactGroup);

@@ -9,7 +9,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,9 +21,21 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 public class dbHandler extends SQLiteOpenHelper {
@@ -577,6 +591,105 @@ public class dbHandler extends SQLiteOpenHelper {
         Log.d("fetchinggroup", "fetchGroup: "+contactGroup);
         updateGroup(contactGroup);
 
+    }
+
+
+    public void fetchDataFromAPI(Context context,String apiURL)
+    {
+
+
+        //        API Testing
+
+//        [{"fname":"test6","lname":"","p1":"6","p2":"66","email":"test6@gmail.com"},{"fname":"test7","lname":"","p1":"7","p2":"77","email":"test7@gmail.com"}]
+
+
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, apiURL, null, new Response.Listener<JSONArray>() {
+
+
+            public void onResponse(JSONArray response) {
+                try {
+
+
+                    for (int i = 0; i < response.length(); i++) {
+                        Contact contact = new Contact();
+
+                        JSONObject obj = response.getJSONObject(i);
+                        contact.setFirstName(obj.getString("fname"));
+                        contact.setLastName(obj.getString("lname"));
+                        contact.setPhone1(obj.getString("p1"));
+                        contact.setPhone2(obj.getString("p2"));
+                        contact.setEmail(obj.getString("email"));
+//                        Log.d("fetching API", obj.getString("fname"));
+//                        Log.d("fetching API", obj.getString("lname"));
+//                        Log.d("fetching API", obj.getString("p1"));
+//                        Log.d("fetching API", obj.getString("p2"));
+//                        Log.d("fetching API", obj.getString("email"));
+
+
+                        String src = obj.getString("imgSource");
+                        String bitmap = null;
+                        Log.d("fetching", "before: " + bitmap);
+                        new GetImageFromUrl(contact).execute(src);
+                        Log.d("fetching", "after: " + bitmap);
+//                        handler.addContact(contact, MainActivity.this, bitmap);
+                    }
+
+
+//                    Log.d("fetching API", response.get(0).toString());
+//                    Log.d("fetching API", response.get(1).toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("fetching API", String.valueOf(error));
+                    }
+                });
+
+        requestQueue.add(jsonArrayRequest);
+
+
+//        ----------------------------
+
+
+    }
+
+    public class GetImageFromUrl extends AsyncTask<String, Void, Bitmap> {
+
+        Contact contact = new Contact();
+
+        public GetImageFromUrl(Contact contact) {
+            this.contact = contact;
+        }
+
+        protected Bitmap doInBackground(String... url) {
+            String stringUrl = url[0];
+            Bitmap bitmap = null;
+            InputStream inputStream;
+            try {
+                inputStream = new java.net.URL(stringUrl).openStream();
+                bitmap = BitmapFactory.decodeStream(inputStream);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Log.d("fetching", "doInBackground: " + bitmap);
+            return bitmap;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmapPhoto) {
+            super.onPostExecute(bitmapPhoto);
+            Bitmap bitmap = bitmapPhoto;
+
+            addContact(contact, mainActivityContext, bitmap);
+            Log.d("fetchBitmap", "onPostExecute: " + bitmap);
+        }
     }
 
 }

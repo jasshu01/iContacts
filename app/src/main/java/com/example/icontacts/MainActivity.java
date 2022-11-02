@@ -329,100 +329,11 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(ca);
 
-
-        //        API Testing
-
-//        [{"fname":"test6","lname":"","p1":"6","p2":"66","email":"test6@gmail.com"},{"fname":"test7","lname":"","p1":"7","p2":"77","email":"test7@gmail.com"}]
-
-
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        String apiURL = "https://mocki.io/v1/3534e930-8cce-4949-b269-a461c4e6b617";
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, apiURL, null, new Response.Listener<JSONArray>() {
-
-
-            public void onResponse(JSONArray response) {
-                try {
-
-
-                    for (int i = 0; i < response.length(); i++) {
-                        Contact contact = new Contact();
-
-                        JSONObject obj = response.getJSONObject(i);
-                        contact.setFirstName(obj.getString("fname"));
-                        contact.setLastName(obj.getString("lname"));
-                        contact.setPhone1(obj.getString("p1"));
-                        contact.setPhone2(obj.getString("p2"));
-                        contact.setEmail(obj.getString("email"));
-//                        Log.d("fetching API", obj.getString("fname"));
-//                        Log.d("fetching API", obj.getString("lname"));
-//                        Log.d("fetching API", obj.getString("p1"));
-//                        Log.d("fetching API", obj.getString("p2"));
-//                        Log.d("fetching API", obj.getString("email"));
-
-
-                        String src = obj.getString("imgSource");
-                        Log.d("fetching", "before: " + bitmap);
-                        new GetImageFromUrl(contact).execute(src);
-                        Log.d("fetching", "after: " + bitmap);
-//                        handler.addContact(contact, MainActivity.this, bitmap);
-                    }
-
-
-//                    Log.d("fetching API", response.get(0).toString());
-//                    Log.d("fetching API", response.get(1).toString());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d("fetching API", String.valueOf(error));
-                    }
-                });
-
-        requestQueue.add(jsonArrayRequest);
-
-
-//        ----------------------------
-
+//        For Fetching data from API
+        handler.fetchDataFromAPI(MainActivity.this, "https://mocki.io/v1/3534e930-8cce-4949-b269-a461c4e6b617");
 
     }
 
-
-    public class GetImageFromUrl extends AsyncTask<String, Void, Bitmap> {
-
-        Contact contact = new Contact();
-
-        public GetImageFromUrl(Contact contact) {
-            this.contact = contact;
-        }
-
-        protected Bitmap doInBackground(String... url) {
-            String stringUrl = url[0];
-            Bitmap bitmap = null;
-            InputStream inputStream;
-            try {
-                inputStream = new java.net.URL(stringUrl).openStream();
-                bitmap = BitmapFactory.decodeStream(inputStream);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            Log.d("fetching", "doInBackground: " + bitmap);
-            return bitmap;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmapPhoto) {
-            super.onPostExecute(bitmapPhoto);
-            bitmap = bitmapPhoto;
-
-            handler.addContact(contact, MainActivity.this, bitmap);
-            Log.d("fetchBitmap", "onPostExecute: " + bitmap);
-        }
-    }
 
     ActivityResultLauncher<Intent> activityResultLauncher_pickFile = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         if (result.getResultCode() == Activity.RESULT_OK) {
